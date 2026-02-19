@@ -16,33 +16,39 @@ const rateLimitStore = new Map();
 const RATE_LIMIT = RATE_LIMITS.EARNINGS_TRACKER;
 
 // ─── Blob cache helpers ───────────────────────────────────────────────────────
-function getBlobStore() {
-  return getStore({ name: 'earnings-tracker-cache', consistency: 'strong' });
+function getBlobStore(context) {
+  // When running inside a Netlify function, pass the Lambda context for
+  // automatic credential injection. Falls back to env vars for local dev.
+  return getStore({ name: 'earnings-tracker-cache', consistency: 'strong', ...( context ? { context } : {}) });
 }
 
-async function blobGet(ticker) {
+async function blobGet(ticker, context) {
   try {
-    const store = getBlobStore();
-    const raw = await store.get(ticker, { type: 'json' });
+    const raw = await getBlobStore(context).get(ticker, { type: 'json' });
     if (!raw) return null;
     if (Date.now() > raw.expires_at) {
-      await store.delete(ticker).catch(() => {});
+      await getBlobStore(context).delete(ticker).catch(() => {});
       return null;
     }
     return raw;
-  } catch { return null; }
+  } catch (e) {
+    console.warn('[earnings-tracker] Blob read failed:', e.message);
+    return null;
+  }
 }
 
-async function blobSet(ticker, data) {
+async function blobSet(ticker, data, context) {
   try {
-    const store = getBlobStore();
-    await store.setJSON(ticker, {
+    await getBlobStore(context).setJSON(ticker, {
       ticker,
       fetched_at: Date.now(),
       expires_at: Date.now() + CACHE_TTL_MS.EARNINGS_TRACKER,
       data,
     });
-  } catch (e) { console.warn('Blob write failed:', e.message); }
+    console.log(`[earnings-tracker] Blob written: ${ticker}`);
+  } catch (e) {
+    console.warn('[earnings-tracker] Blob write failed:', e.message);
+  }
 }
 
 function checkRateLimit(ip) {
@@ -65,7 +71,7 @@ function checkRateLimit(ip) {
   return { allowed: true, remaining: RATE_LIMIT.maxRequests - entry.count, resetAt: entry.resetAt };
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 204, headers: CORS_HEADERS, body: '' };
   }
@@ -142,15 +148,16 @@ exports.handler = async (event) => {
   }
 
   // ── Server-side Blob cache check (shared across all users) ──────────────────
-  const cached = await blobGet(ticker);
+  const cached = await blobGet(ticker, context);
   if (cached) {
-    console.log(`[earnings-tracker] Blob cache hit: ${ticker} (fetched ${Math.round((Date.now() - cached.fetched_at) / 60000)}m ago)`);
+    console.log(`[earnings-tracker] Blob cache HIT: ${ticker} (fetched ${Math.round((Date.now() - cached.fetched_at) / 60000)}m ago)`);
     return {
       statusCode: 200,
       headers: { ...CORS_HEADERS, 'X-Cache': 'HIT', 'X-Cache-Age': String(Math.round((Date.now() - cached.fetched_at) / 1000)) },
       body: JSON.stringify({ _fromCache: true, _fetchedAt: cached.fetched_at, ...cached.data }),
     };
   }
+  console.log(`[earnings-tracker] Blob cache MISS: ${ticker} — calling Anthropic`);
 
   try {
     const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
@@ -219,9 +226,9 @@ Critical rules:
       console.warn('[earnings-tracker] Could not pre-parse Anthropic response:', parseErr.message);
     }
 
-    // ── Write clean result to Blob cache (fire-and-forget) ───────────────────
+    // ── Write clean result to Blob cache — awaited to ensure completion ──────
     if (earningsData && earningsData.data_confirmed) {
-      blobSet(ticker, earningsData);
+      await blobSet(ticker, earningsData, context);
     }
 
     return {

@@ -21,30 +21,34 @@ const RATE_LIMIT = RATE_LIMITS.WMT_EARNINGS;
 // ─── Blob cache helpers ───────────────────────────────────────────────────────
 const WMT_BLOB_KEY = 'wmt-earnings-latest';
 
-function getWmtStore() {
-  return getStore({ name: 'wmt-earnings-cache', consistency: 'strong' });
+function getWmtStore(context) {
+  return getStore({ name: 'wmt-earnings-cache', consistency: 'strong', ...(context ? { context } : {}) });
 }
 
-async function wmtBlobGet() {
+async function wmtBlobGet(context) {
   try {
-    const raw = await getWmtStore().get(WMT_BLOB_KEY, { type: 'json' });
+    const raw = await getWmtStore(context).get(WMT_BLOB_KEY, { type: 'json' });
     if (!raw) return null;
     if (Date.now() > raw.expires_at) {
-      await getWmtStore().delete(WMT_BLOB_KEY).catch(() => {});
+      await getWmtStore(context).delete(WMT_BLOB_KEY).catch(() => {});
       return null;
     }
     return raw;
-  } catch { return null; }
+  } catch (e) {
+    console.warn('[fetch-earnings] Blob read failed:', e.message);
+    return null;
+  }
 }
 
-async function wmtBlobSet(data) {
+async function wmtBlobSet(data, context) {
   try {
-    await getWmtStore().setJSON(WMT_BLOB_KEY, {
+    await getWmtStore(context).setJSON(WMT_BLOB_KEY, {
       fetched_at: Date.now(),
       expires_at: Date.now() + CACHE_TTL_MS.WMT_EARNINGS,
       data,
     });
-  } catch (e) { console.warn('WMT Blob write failed:', e.message); }
+    console.log('[fetch-earnings] Blob written: wmt-earnings-latest');
+  } catch (e) { console.warn('[fetch-earnings] Blob write failed:', e.message); }
 }
 
 function getRateLimitKey(ip) {
@@ -73,7 +77,7 @@ function checkRateLimit(ip) {
 }
 
 // ─── Main handler ──────────────────────────────────────────────────────────────
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
 
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
@@ -147,15 +151,16 @@ exports.handler = async (event) => {
   }
 
   // ── Server-side Blob cache check (shared across all users, 15 min TTL) ─────
-  const cachedWmt = await wmtBlobGet();
+  const cachedWmt = await wmtBlobGet(context);
   if (cachedWmt) {
-    console.log(`[fetch-earnings] Blob cache hit (fetched ${Math.round((Date.now() - cachedWmt.fetched_at) / 60000)}m ago)`);
+    console.log(`[fetch-earnings] Blob cache HIT (fetched ${Math.round((Date.now() - cachedWmt.fetched_at) / 60000)}m ago)`);
     return {
       statusCode: 200,
       headers: { ...CORS_HEADERS, 'X-Cache': 'HIT', 'X-Cache-Age': String(Math.round((Date.now() - cachedWmt.fetched_at) / 1000)) },
       body: JSON.stringify({ _fromCache: true, _fetchedAt: cachedWmt.fetched_at, ...cachedWmt.data }),
     };
   }
+  console.log('[fetch-earnings] Blob cache MISS — calling Anthropic');
 
   // ── Call Anthropic API ───────────────────────────────────────────────────────
   try {
@@ -196,7 +201,7 @@ exports.handler = async (event) => {
     const data = await anthropicResponse.json();
 
     // Fire-and-forget: write confirmed results to Blob cache
-    if (data?.content) wmtBlobSet(data);
+    if (data?.content) await wmtBlobSet(data, context);
 
     // Return the raw Anthropic response — HTML will parse it
     return {

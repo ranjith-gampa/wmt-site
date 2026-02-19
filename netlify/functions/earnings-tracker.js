@@ -17,9 +17,15 @@ const RATE_LIMIT = RATE_LIMITS.EARNINGS_TRACKER;
 
 // ─── Blob cache helpers ───────────────────────────────────────────────────────
 function getBlobStore(context) {
-  // When running inside a Netlify function, pass the Lambda context for
-  // automatic credential injection. Falls back to env vars for local dev.
-  return getStore({ name: 'earnings-tracker-cache', consistency: 'strong', ...( context ? { context } : {}) });
+  // NETLIFY_TOKEN is only present in local .env (never set in Netlify prod).
+  // Local dev: netlify dev context carries no Blob credentials, so use the
+  //            explicit siteID + token from .env.
+  // Production: context carries credentials automatically — use it directly.
+  if (process.env.NETLIFY_TOKEN) {
+    return getStore({ name: 'earnings-tracker-cache', consistency: 'strong',
+      siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_TOKEN });
+  }
+  return getStore({ name: 'earnings-tracker-cache', consistency: 'strong', context });
 }
 
 async function blobGet(ticker, context) {

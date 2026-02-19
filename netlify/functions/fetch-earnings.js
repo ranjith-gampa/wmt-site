@@ -22,7 +22,14 @@ const RATE_LIMIT = RATE_LIMITS.WMT_EARNINGS;
 const WMT_BLOB_KEY = 'wmt-earnings-latest';
 
 function getWmtStore(context) {
-  return getStore({ name: 'wmt-earnings-cache', consistency: 'strong', ...(context ? { context } : {}) });
+  // NETLIFY_TOKEN is only present in local .env (never set in Netlify prod).
+  // Local dev: use explicit siteID + token from .env.
+  // Production: use Lambda context for automatic credential injection.
+  if (process.env.NETLIFY_TOKEN) {
+    return getStore({ name: 'wmt-earnings-cache', consistency: 'strong',
+      siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_TOKEN });
+  }
+  return getStore({ name: 'wmt-earnings-cache', consistency: 'strong', context });
 }
 
 async function wmtBlobGet(context) {

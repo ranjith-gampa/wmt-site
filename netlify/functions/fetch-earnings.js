@@ -21,23 +21,22 @@ const RATE_LIMIT = RATE_LIMITS.WMT_EARNINGS;
 // ─── Blob cache helpers ───────────────────────────────────────────────────────
 const WMT_BLOB_KEY = 'wmt-earnings-latest';
 
-function getWmtStore(context) {
-  // NETLIFY_TOKEN is only present in local .env (never set in Netlify prod).
-  // Local dev: use explicit siteID + token from .env.
-  // Production: use Lambda context for automatic credential injection.
-  if (process.env.NETLIFY_TOKEN) {
-    return getStore({ name: 'wmt-earnings-cache', consistency: 'strong',
-      siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_TOKEN });
-  }
-  return getStore({ name: 'wmt-earnings-cache', consistency: 'strong', context });
+function getWmtStore() {
+  // @netlify/blobs v10 reads NETLIFY_BLOBS_CONTEXT automatically in production.
+  // For local dev, pass siteID + token from .env explicitly.
+  // The AWS Lambda context object is NOT used by this library.
+  const opts = { name: 'wmt-earnings-cache', consistency: 'strong' };
+  if (process.env.NETLIFY_SITE_ID) opts.siteID = process.env.NETLIFY_SITE_ID;
+  if (process.env.NETLIFY_TOKEN)   opts.token  = process.env.NETLIFY_TOKEN;
+  return getStore(opts);
 }
 
-async function wmtBlobGet(context) {
+async function wmtBlobGet() {
   try {
-    const raw = await getWmtStore(context).get(WMT_BLOB_KEY, { type: 'json' });
+    const raw = await getWmtStore().get(WMT_BLOB_KEY, { type: 'json' });
     if (!raw) return null;
     if (Date.now() > raw.expires_at) {
-      await getWmtStore(context).delete(WMT_BLOB_KEY).catch(() => {});
+      await getWmtStore().delete(WMT_BLOB_KEY).catch(() => {});
       return null;
     }
     return raw;
@@ -47,9 +46,9 @@ async function wmtBlobGet(context) {
   }
 }
 
-async function wmtBlobSet(data, context) {
+async function wmtBlobSet(data) {
   try {
-    await getWmtStore(context).setJSON(WMT_BLOB_KEY, {
+    await getWmtStore().setJSON(WMT_BLOB_KEY, {
       fetched_at: Date.now(),
       expires_at: Date.now() + CACHE_TTL_MS.WMT_EARNINGS,
       data,
@@ -158,7 +157,7 @@ exports.handler = async (event, context) => {
   }
 
   // ── Server-side Blob cache check (shared across all users, 15 min TTL) ─────
-  const cachedWmt = await wmtBlobGet(context);
+  const cachedWmt = await wmtBlobGet();
   if (cachedWmt) {
     console.log(`[fetch-earnings] Blob cache HIT (fetched ${Math.round((Date.now() - cachedWmt.fetched_at) / 60000)}m ago)`);
     return {
@@ -207,8 +206,8 @@ exports.handler = async (event, context) => {
 
     const data = await anthropicResponse.json();
 
-    // Fire-and-forget: write confirmed results to Blob cache
-    if (data?.content) await wmtBlobSet(data, context);
+    // Write confirmed results to Blob cache
+    if (data?.content) await wmtBlobSet(data);
 
     // Return the raw Anthropic response — HTML will parse it
     return {

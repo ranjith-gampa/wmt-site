@@ -16,24 +16,23 @@ const rateLimitStore = new Map();
 const RATE_LIMIT = RATE_LIMITS.EARNINGS_TRACKER;
 
 // ─── Blob cache helpers ───────────────────────────────────────────────────────
-function getBlobStore(context) {
-  // NETLIFY_TOKEN is only present in local .env (never set in Netlify prod).
-  // Local dev: netlify dev context carries no Blob credentials, so use the
-  //            explicit siteID + token from .env.
-  // Production: context carries credentials automatically — use it directly.
-  if (process.env.NETLIFY_TOKEN) {
-    return getStore({ name: 'earnings-tracker-cache', consistency: 'strong',
-      siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_TOKEN });
-  }
-  return getStore({ name: 'earnings-tracker-cache', consistency: 'strong', context });
+function getBlobStore() {
+  // @netlify/blobs v10 reads credentials from NETLIFY_BLOBS_CONTEXT env var,
+  // which Netlify sets automatically in production Lambda environments.
+  // For local dev, we pass siteID + token from .env explicitly.
+  // The AWS Lambda `context` object is NOT used by this library — drop it.
+  const opts = { name: 'earnings-tracker-cache', consistency: 'strong' };
+  if (process.env.NETLIFY_SITE_ID) opts.siteID = process.env.NETLIFY_SITE_ID;
+  if (process.env.NETLIFY_TOKEN)   opts.token  = process.env.NETLIFY_TOKEN;
+  return getStore(opts);
 }
 
-async function blobGet(ticker, context) {
+async function blobGet(ticker) {
   try {
-    const raw = await getBlobStore(context).get(ticker, { type: 'json' });
+    const raw = await getBlobStore().get(ticker, { type: 'json' });
     if (!raw) return null;
     if (Date.now() > raw.expires_at) {
-      await getBlobStore(context).delete(ticker).catch(() => {});
+      await getBlobStore().delete(ticker).catch(() => {});
       return null;
     }
     return raw;
@@ -43,9 +42,9 @@ async function blobGet(ticker, context) {
   }
 }
 
-async function blobSet(ticker, data, context) {
+async function blobSet(ticker, data) {
   try {
-    await getBlobStore(context).setJSON(ticker, {
+    await getBlobStore().setJSON(ticker, {
       ticker,
       fetched_at: Date.now(),
       expires_at: Date.now() + CACHE_TTL_MS.EARNINGS_TRACKER,
@@ -154,7 +153,7 @@ exports.handler = async (event, context) => {
   }
 
   // ── Server-side Blob cache check (shared across all users) ──────────────────
-  const cached = await blobGet(ticker, context);
+  const cached = await blobGet(ticker);
   if (cached) {
     console.log(`[earnings-tracker] Blob cache HIT: ${ticker} (fetched ${Math.round((Date.now() - cached.fetched_at) / 60000)}m ago)`);
     return {
@@ -234,7 +233,7 @@ Critical rules:
 
     // ── Write clean result to Blob cache — awaited to ensure completion ──────
     if (earningsData && earningsData.data_confirmed) {
-      await blobSet(ticker, earningsData, context);
+      await blobSet(ticker, earningsData);
     }
 
     return {

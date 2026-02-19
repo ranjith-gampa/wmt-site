@@ -1,0 +1,2491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WMT Earnings Intelligence — Feb 19, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070a0f;
+    --surface: #0d1117;
+    --surface2: #131920;
+    --border: #1e2a35;
+    --border2: #243040;
+    --accent: #00d4aa;
+    --accent2: #0099ff;
+    --bull: #00d4aa;
+    --bear: #ff4466;
+    --neutral: #ffaa00;
+    --text: #e8edf2;
+    --text2: #8a9ab0;
+    --text3: #4a5a6a;
+    --glow: rgba(0, 212, 170, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 212, 170, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 170, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-left h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header-left .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .status-badge.waiting {
+    border-color: var(--neutral);
+    color: var(--neutral);
+    background: rgba(255, 170, 0, 0.08);
+  }
+
+  .status-badge.live {
+    border-color: var(--bull);
+    color: var(--bull);
+    background: rgba(0, 212, 170, 0.08);
+  }
+
+  .status-badge.error {
+    border-color: var(--bear);
+    color: var(--bear);
+    background: rgba(255, 68, 102, 0.08);
+  }
+
+  .pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .refresh-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* COUNTDOWN / TIMER */
+  #countdown-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  #countdown-section.complete {
+    border-color: var(--bull);
+    background: rgba(0, 212, 170, 0.05);
+  }
+
+  .countdown-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  #countdown-display {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--neutral);
+    letter-spacing: -1px;
+  }
+
+  #countdown-display.complete {
+    color: var(--bull);
+  }
+
+  .countdown-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .cron-info {
+    text-align: right;
+  }
+
+  .cron-info .cron-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .cron-code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    background: rgba(0, 153, 255, 0.1);
+    border: 1px solid rgba(0, 153, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* LIVE RESULTS */
+  #results-section {
+    display: none;
+    margin-bottom: 24px;
+  }
+
+  #results-section.visible {
+    display: block;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    transition: all 0.3s;
+  }
+
+  .result-card.beat {
+    border-color: rgba(0, 212, 170, 0.4);
+    background: rgba(0, 212, 170, 0.05);
+  }
+
+  .result-card.miss {
+    border-color: rgba(255, 68, 102, 0.4);
+    background: rgba(255, 68, 102, 0.05);
+  }
+
+  .result-card.inline-beat {
+    border-color: rgba(255, 170, 0, 0.3);
+  }
+
+  .result-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .result-actual {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .result-vs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .result-est {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .result-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  .beat-badge { background: rgba(0, 212, 170, 0.15); color: var(--bull); }
+  .miss-badge { background: rgba(255, 68, 102, 0.15); color: var(--bear); }
+  .inline-badge { background: rgba(255, 170, 0, 0.15); color: var(--neutral); }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* BULL / BEAR CARDS */
+  .scenario-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .scenario-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .scenario-header.bull-header {
+    background: rgba(0, 212, 170, 0.06);
+  }
+
+  .scenario-header.bear-header {
+    background: rgba(255, 68, 102, 0.06);
+  }
+
+  .scenario-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .scenario-icon {
+    font-size: 20px;
+  }
+
+  .scenario-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .bull-header .scenario-name { color: var(--bull); }
+  .bear-header .scenario-name { color: var(--bear); }
+
+  .scenario-prob {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  .scenario-prob span {
+    font-size: 18px;
+    font-weight: 700;
+    display: block;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .bull-header .scenario-prob span { color: var(--bull); }
+  .bear-header .scenario-prob span { color: var(--bear); }
+
+  .scenario-body {
+    padding: 16px 20px;
+  }
+
+  .scenario-target {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .target-price {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+  }
+
+  .bull-card .target-price { color: var(--bull); }
+  .bear-card .target-price { color: var(--bear); }
+
+  .target-updown {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .bull-card .target-updown {
+    background: rgba(0, 212, 170, 0.15);
+    color: var(--bull);
+  }
+
+  .bear-card .target-updown {
+    background: rgba(255, 68, 102, 0.15);
+    color: var(--bear);
+  }
+
+  .target-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  .check-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 9px;
+    font-weight: 700;
+  }
+
+  .bull-check {
+    background: rgba(0, 212, 170, 0.15);
+    color: var(--bull);
+    border: 1px solid rgba(0, 212, 170, 0.3);
+  }
+
+  .bear-check {
+    background: rgba(255, 68, 102, 0.15);
+    color: var(--bear);
+    border: 1px solid rgba(255, 68, 102, 0.3);
+  }
+
+  /* STATUS TRACKER */
+  .status-tracker {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .tracker-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .criteria-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    transition: all 0.4s;
+  }
+
+  .criteria-item.met {
+    border-color: rgba(0, 212, 170, 0.4);
+    background: rgba(0, 212, 170, 0.05);
+  }
+
+  .criteria-item.not-met {
+    border-color: rgba(255, 68, 102, 0.3);
+    background: rgba(255, 68, 102, 0.04);
+  }
+
+  .criteria-item.pending {
+    border-color: var(--border);
+    opacity: 0.6;
+  }
+
+  .criteria-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .criteria-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .met .criteria-dot { background: var(--bull); }
+  .not-met .criteria-dot { background: var(--bear); }
+  .pending .criteria-dot { background: var(--text3); }
+
+  .criteria-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .met .criteria-tag { color: var(--bull); }
+  .not-met .criteria-tag { color: var(--bear); }
+  .pending .criteria-tag { color: var(--text3); }
+
+  .criteria-name {
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .criteria-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .met .criteria-value { color: var(--bull); }
+  .not-met .criteria-value { color: var(--bear); }
+
+  /* PRICE TARGETS TABLE */
+  .price-table-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 12px 12px;
+    font-size: 13px;
+    color: var(--text2);
+    border-bottom: 1px solid rgba(30, 42, 53, 0.5);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .td-scenario {
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+  }
+
+  .td-eod { color: var(--text); font-family: 'DM Mono', monospace; }
+
+  .td-y1.bull { color: var(--bull); font-family: 'DM Mono', monospace; font-weight: 600; }
+  .td-y1.bear { color: var(--bear); font-family: 'DM Mono', monospace; font-weight: 600; }
+  .td-y1.base { color: var(--neutral); font-family: 'DM Mono', monospace; font-weight: 600; }
+
+  .td-y2.bull { color: var(--bull); font-family: 'DM Mono', monospace; font-weight: 600; }
+  .td-y2.bear { color: var(--bear); font-family: 'DM Mono', monospace; font-weight: 600; }
+  .td-y2.base { color: var(--neutral); font-family: 'DM Mono', monospace; font-weight: 600; }
+
+  .td-thesis {
+    font-size: 12px;
+    color: var(--text3);
+    max-width: 260px;
+    line-height: 1.5;
+  }
+
+  .td-prob {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* GROWTH LEVERS */
+  .levers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .lever-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .lever-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+  }
+
+  .lever-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .lever-card.green::before { background: var(--bull); }
+  .lever-card.blue::before { background: var(--accent2); }
+  .lever-card.amber::before { background: var(--neutral); }
+  .lever-card.pink::before { background: #ff6699; }
+  .lever-card.purple::before { background: #9966ff; }
+  .lever-card.cyan::before { background: #00ccff; }
+
+  .lever-emoji {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .lever-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .lever-metric {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .lever-bar-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .lever-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1.5s ease;
+  }
+
+  .lever-card.green .lever-bar-fill { background: var(--bull); }
+  .lever-card.blue .lever-bar-fill { background: var(--accent2); }
+  .lever-card.amber .lever-bar-fill { background: var(--neutral); }
+  .lever-card.pink .lever-bar-fill { background: #ff6699; }
+  .lever-card.purple .lever-bar-fill { background: #9966ff; }
+  .lever-card.cyan .lever-bar-fill { background: #00ccff; }
+
+  .lever-detail {
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+
+  /* ANALYST TARGETS */
+  .analyst-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .analyst-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .analyst-firm {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 80px;
+  }
+
+  .analyst-rating {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  .buy-rating {
+    background: rgba(0, 212, 170, 0.15);
+    color: var(--bull);
+  }
+
+  .analyst-pt {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* LOG */
+  .log-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+
+  .log-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text2);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #log-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+
+  #log-list li {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(30,42,53,0.4);
+  }
+
+  #log-list li:last-child { border-bottom: none; }
+
+  .log-time { color: var(--accent2); min-width: 65px; }
+  .log-msg { color: var(--text3); }
+  .log-msg.ok { color: var(--bull); }
+  .log-msg.warn { color: var(--neutral); }
+  .log-msg.err { color: var(--bear); }
+
+  /* VERDICT BANNER */
+  #verdict-banner {
+    display: none;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    border: 1px solid;
+    text-align: center;
+  }
+
+  #verdict-banner.bull-verdict {
+    border-color: var(--bull);
+    background: rgba(0, 212, 170, 0.06);
+  }
+
+  #verdict-banner.bear-verdict {
+    border-color: var(--bear);
+    background: rgba(255, 68, 102, 0.06);
+  }
+
+  #verdict-banner.visible { display: block; }
+
+  #verdict-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+
+  #verdict-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  #verdict-desc {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 8px;
+    line-height: 1.6;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px 0 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    border-top: 1px solid var(--border);
+    margin-top: 24px;
+  }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in {
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  @keyframes flashBull {
+    0%, 100% { background: transparent; }
+    50% { background: rgba(0, 212, 170, 0.1); }
+  }
+
+  .flash-bull { animation: flashBull 0.8s ease 3; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .results-grid { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .criteria-grid { grid-template-columns: repeat(2, 1fr); }
+    .levers-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 700px) {
+    .results-grid { grid-template-columns: 1fr; }
+    .criteria-grid { grid-template-columns: 1fr; }
+    .levers-grid { grid-template-columns: 1fr; }
+    header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    #countdown-section { flex-direction: column; }
+  }
+
+  /* ─── TAB NAVIGATION ─────────────────────────────────── */
+  .tab-nav {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text3);
+    padding: 10px 22px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn:hover { color: var(--text2); }
+
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ─── EARNINGS TRACKER ───────────────────────────────── */
+  .tracker-hero {
+    text-align: center;
+    padding: 40px 0 28px;
+  }
+
+  .tracker-hero h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .tracker-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 8px;
+    max-width: 580px;
+    margin: 24px auto 16px;
+  }
+
+  .search-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .search-input::placeholder {
+    color: var(--text3);
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13px;
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--glow);
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .search-input.input-error {
+    border-color: var(--bear);
+    box-shadow: 0 0 0 3px rgba(255, 68, 102, 0.15);
+    animation: shake 0.3s ease;
+  }
+
+  .search-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    color: var(--bg);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .search-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  .quick-chips {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .quick-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .quick-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  .tracker-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .cache-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    letter-spacing: 1px;
+  }
+
+  .cache-badge.live {
+    background: rgba(0, 212, 170, 0.1);
+    color: var(--bull);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+  }
+
+  .cache-badge.cached {
+    background: rgba(0, 153, 255, 0.1);
+    color: var(--accent2);
+    border: 1px solid rgba(0, 153, 255, 0.2);
+  }
+
+  /* Tracker result header */
+  .tr-result-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .tr-ticker-block { display: flex; align-items: center; gap: 14px; }
+
+  .tr-ticker-symbol {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .tr-company-name { font-size: 14px; color: var(--text2); font-weight: 500; margin-top: 2px; }
+
+  .tr-meta-block { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+  .tr-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    border: 1px solid;
+  }
+
+  .tr-badge.quarter { border-color: var(--border2); color: var(--text2); background: var(--surface2); }
+  .tr-badge.date { border-color: rgba(0, 153, 255, 0.4); color: var(--accent2); background: rgba(0, 153, 255, 0.08); }
+  .tr-badge.bmo { border-color: rgba(255, 170, 0, 0.4); color: var(--neutral); background: rgba(255, 170, 0, 0.08); }
+  .tr-badge.amc { border-color: rgba(153, 102, 255, 0.4); color: #9966ff; background: rgba(153, 102, 255, 0.08); }
+
+  /* Stats grid */
+  .tr-stats-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .tr-stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+
+  .tr-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .tr-stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .tr-stat-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .tr-stat-card.countdown .tr-stat-value { color: var(--neutral); font-size: 22px; }
+  .tr-stat-card.implied .tr-stat-value { color: var(--accent2); }
+
+  /* Analyst section */
+  .tr-analyst-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .tr-consensus-block { display: flex; flex-direction: column; gap: 4px; min-width: 100px; }
+  .tr-consensus-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 1.5px; text-transform: uppercase; }
+  .tr-consensus-value { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+
+  .tr-pt-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 100px;
+    padding-left: 24px;
+    border-left: 1px solid var(--border);
+  }
+
+  .tr-analyst-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+    padding-left: 24px;
+    border-left: 1px solid var(--border);
+  }
+
+  /* Key metrics grid */
+  .tr-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .tr-metric-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .tr-metric-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .tr-metric-est { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); }
+  .tr-metric-context { font-size: 11px; color: var(--text3); margin-top: 4px; line-height: 1.5; }
+
+  /* Error state */
+  .tr-error {
+    background: rgba(255, 68, 102, 0.05);
+    border: 1px solid rgba(255, 68, 102, 0.2);
+    border-radius: 12px;
+    padding: 28px;
+    text-align: center;
+    color: var(--bear);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-top: 8px;
+  }
+
+  /* Tracker responsive */
+  @media (max-width: 1100px) {
+    .tr-stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .tr-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 700px) {
+    .tr-stats-grid { grid-template-columns: 1fr; }
+    .tr-metrics-grid { grid-template-columns: 1fr; }
+    .tr-analyst-section { flex-direction: column; }
+    .tr-pt-block, .tr-analyst-chips { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 12px; }
+    .search-bar { flex-direction: column; }
+    .search-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TAB NAVIGATION -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="wmt" onclick="switchTab('wmt')">⊞ WMT Dashboard</button>
+    <button class="tab-btn" data-tab="tracker" onclick="switchTab('tracker')">⚡ Earnings Tracker</button>
+  </nav>
+
+  <div id="panel-wmt" class="tab-panel">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <h1>WMT Earnings Intelligence</h1>
+      <div class="subtitle">FY2026 Q4 · Feb 19, 2026 · Bull vs Bear Validation</div>
+    </div>
+    <div class="header-right">
+      <div id="status-badge" class="status-badge waiting">
+        <div class="pulse"></div>
+        <span id="status-text">MONITORING</span>
+      </div>
+      <button class="refresh-btn" onclick="triggerFetch()">↻ CHECK NOW</button>
+    </div>
+  </header>
+
+  <!-- COUNTDOWN -->
+  <div id="countdown-section">
+    <div>
+      <div class="countdown-label">⏰ Next Check</div>
+      <div id="countdown-display">—</div>
+      <div class="countdown-sub" id="countdown-sub">Initializing scheduler...</div>
+    </div>
+    <div>
+      <div class="countdown-label">📅 Earnings Window</div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text2);">
+        Release: 6:00 AM CT · Call: 7:00 AM CT
+      </div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); margin-top: 4px;">
+        Market open: 9:30 AM ET
+      </div>
+    </div>
+    <div class="cron-info">
+      <div class="cron-label">Cron Schedule</div>
+      <div class="cron-code">0 6 19 2 * (PT)</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:6px;">
+        + poll every 5min post-release
+      </div>
+    </div>
+  </div>
+
+  <!-- VERDICT BANNER (shown after results load) -->
+  <div id="verdict-banner">
+    <div id="verdict-label">EARNINGS VERDICT</div>
+    <div id="verdict-title">—</div>
+    <div id="verdict-desc">—</div>
+  </div>
+
+  <!-- LIVE RESULTS (shown post-release) -->
+  <div id="results-section">
+    <div class="results-grid" id="results-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- BULL / BEAR ANALYSIS -->
+  <div class="main-grid">
+    <!-- BULL -->
+    <div class="scenario-card bull-card">
+      <div class="scenario-header bull-header">
+        <div class="scenario-title">
+          <span class="scenario-icon">🐂</span>
+          <span class="scenario-name">BULL CASE</span>
+        </div>
+        <div class="scenario-prob">
+          <span id="bull-prob">45%</span>
+          PROBABILITY
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-target">
+          <div class="target-price" id="bull-eoy26">$148</div>
+          <div class="target-updown" id="bull-eoy26-pct">+17%</div>
+          <div class="target-year">End 2026</div>
+          <div class="target-price" id="bull-eoy27" style="margin-left:16px;">$178</div>
+          <div class="target-updown" id="bull-eoy27-pct">+41%</div>
+          <div class="target-year">End 2027</div>
+        </div>
+        <ul class="checklist">
+          <li>
+            <div class="check-icon bull-check" id="bc1-icon">?</div>
+            <div><strong style="color:var(--text)">Q4 EPS beats $0.73+</strong><br>Strong holiday quarter, e-commerce profitability expands</div>
+          </li>
+          <li>
+            <div class="check-icon bull-check" id="bc2-icon">?</div>
+            <div><strong style="color:var(--text)">FY27 OI guidance ≥10%</strong><br>Management signals confidence in ad + membership compounding</div>
+          </li>
+          <li>
+            <div class="check-icon bull-check" id="bc3-icon">?</div>
+            <div><strong style="color:var(--text)">Comp sales ≥4.5%</strong><br>Consumer spending momentum continues into FY27</div>
+          </li>
+          <li>
+            <div class="check-icon bull-check" id="bc4-icon">?</div>
+            <div><strong style="color:var(--text)">Walmart Connect growth >30%</strong><br>Ad flywheel continues; VIZIO integration firing</div>
+          </li>
+          <li>
+            <div class="check-icon bull-check" id="bc5-icon">?</div>
+            <div><strong style="color:var(--text)">PhonePe IPO timeline confirmed</strong><br>Mid-2026 listing at ~$15B unlocks $9.5B Walmart stake value</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BEAR -->
+    <div class="scenario-card bear-card">
+      <div class="scenario-header bear-header">
+        <div class="scenario-title">
+          <span class="scenario-icon">🐻</span>
+          <span class="scenario-name">BEAR CASE</span>
+        </div>
+        <div class="scenario-prob">
+          <span id="bear-prob">25%</span>
+          PROBABILITY
+        </div>
+      </div>
+      <div class="scenario-body">
+        <div class="scenario-target">
+          <div class="target-price" id="bear-eoy26" style="color:var(--bear)">$108</div>
+          <div class="target-updown" id="bear-eoy26-pct" style="background:rgba(255,68,102,.15);color:var(--bear)">-15%</div>
+          <div class="target-year">End 2026</div>
+          <div class="target-price" id="bear-eoy27" style="color:var(--bear);margin-left:16px;">$118</div>
+          <div class="target-updown" id="bear-eoy27-pct" style="background:rgba(255,68,102,.15);color:var(--bear)">-7%</div>
+          <div class="target-year">End 2027</div>
+        </div>
+        <ul class="checklist">
+          <li>
+            <div class="check-icon bear-check" id="brc1-icon">?</div>
+            <div><strong style="color:var(--text)">FY27 guidance misses Street</strong><br>Conservative 4–6% OI guidance vs 11% consensus → sell-off</div>
+          </li>
+          <li>
+            <div class="check-icon bear-check" id="brc2-icon">?</div>
+            <div><strong style="color:var(--text)">45x P/E compression</strong><br>Macro slowdown forces multiple de-rating to 35–38x</div>
+          </li>
+          <li>
+            <div class="check-icon bear-check" id="brc3-icon">?</div>
+            <div><strong style="color:var(--text)">Tariff margin headwinds</strong><br>China/Mexico exposure squeezes gross margins in H1 FY27</div>
+          </li>
+          <li>
+            <div class="check-icon bear-check" id="brc4-icon">?</div>
+            <div><strong style="color:var(--text)">Repeat of Q4 FY25 pattern</strong><br>Beat on Q4 but conservative outlook → -6.5% day-one selloff</div>
+          </li>
+          <li>
+            <div class="check-icon bear-check" id="brc5-icon">?</div>
+            <div><strong style="color:var(--text)">Consumer spending cools</strong><br>Mid/upper income households pull back; comp deceleration</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRITERIA TRACKER -->
+  <div class="status-tracker">
+    <div class="tracker-title">
+      <span>📊</span> Live Criteria Validation
+      <span id="criteria-loading" class="spinner" style="margin-left:8px;"></span>
+    </div>
+    <div class="criteria-grid" id="criteria-grid">
+      <div class="criteria-item pending" id="c-eps">
+        <div class="criteria-status">
+          <div class="criteria-dot"></div>
+          <span class="criteria-tag">PENDING</span>
+        </div>
+        <div class="criteria-name">EPS vs $0.73 estimate</div>
+        <div class="criteria-value" id="c-eps-val">Awaiting release...</div>
+      </div>
+      <div class="criteria-item pending" id="c-rev">
+        <div class="criteria-status">
+          <div class="criteria-dot"></div>
+          <span class="criteria-tag">PENDING</span>
+        </div>
+        <div class="criteria-name">Revenue vs $190.4B est.</div>
+        <div class="criteria-value" id="c-rev-val">Awaiting release...</div>
+      </div>
+      <div class="criteria-item pending" id="c-comp">
+        <div class="criteria-status">
+          <div class="criteria-dot"></div>
+          <span class="criteria-tag">PENDING</span>
+        </div>
+        <div class="criteria-name">US Comp Sales (est. 4.1–4.5%)</div>
+        <div class="criteria-value" id="c-comp-val">Awaiting release...</div>
+      </div>
+      <div class="criteria-item pending" id="c-oi">
+        <div class="criteria-status">
+          <div class="criteria-dot"></div>
+          <span class="criteria-tag">PENDING</span>
+        </div>
+        <div class="criteria-name">Operating Income Growth</div>
+        <div class="criteria-value" id="c-oi-val">Est. ~10% YoY</div>
+      </div>
+      <div class="criteria-item pending" id="c-fy27">
+        <div class="criteria-status">
+          <div class="criteria-dot"></div>
+          <span class="criteria-tag">PENDING</span>
+        </div>
+        <div class="criteria-name">FY27 OI Guidance</div>
+        <div class="criteria-value" id="c-fy27-val">Street expects ~11%</div>
+      </div>
+      <div class="criteria-item pending" id="c-ads">
+        <div class="criteria-status">
+          <div class="criteria-dot"></div>
+          <span class="criteria-tag">PENDING</span>
+        </div>
+        <div class="criteria-name">Walmart Connect Growth</div>
+        <div class="criteria-value" id="c-ads-val">Est. >30% YoY</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICE TARGETS TABLE -->
+  <div class="price-table-section">
+    <div class="section-title">📈 Price Target Scenarios</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Today Est.</th>
+          <th>End 2026</th>
+          <th>End 2027</th>
+          <th>P/E Basis (FY27)</th>
+          <th>Probability</th>
+          <th>Key Thesis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="td-scenario" style="color:var(--bull)">🐂 Super Bull</span></td>
+          <td class="td-eod">+6–9%</td>
+          <td class="td-y1 bull">$158–165</td>
+          <td class="td-y2 bull">$195–210</td>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);">50–52x</td>
+          <td class="td-prob" style="color:var(--bull)">15%</td>
+          <td class="td-thesis">Blowout Q4 + FY27 OI >12% guide. PhonePe IPO drives re-rating. Ads reach $10B+</td>
+        </tr>
+        <tr>
+          <td><span class="td-scenario" style="color:var(--bull)">🐂 Bull</span></td>
+          <td class="td-eod">+3–6%</td>
+          <td class="td-y1 bull">$140–150</td>
+          <td class="td-y2 bull">$170–185</td>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);">46–48x</td>
+          <td class="td-prob" style="color:var(--bull)">30%</td>
+          <td class="td-thesis">Beat + FY27 guidance in-line with Street. Multi-lever story confirms. Stock reclaims ATH</td>
+        </tr>
+        <tr>
+          <td><span class="td-scenario" style="color:var(--neutral)">➡️ Base</span></td>
+          <td class="td-eod">Flat–+2%</td>
+          <td class="td-y1 base">$128–135</td>
+          <td class="td-y2 base">$148–162</td>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);">43–45x</td>
+          <td class="td-prob" style="color:var(--neutral)">30%</td>
+          <td class="td-thesis">Modest beat, conservative FY27 guidance 6–8% OI. Multiple stable. Ads + Sam's carry the year</td>
+        </tr>
+        <tr>
+          <td><span class="td-scenario" style="color:var(--bear)">🐻 Bear</span></td>
+          <td class="td-eod">-4–7%</td>
+          <td class="td-y1 bear">$110–120</td>
+          <td class="td-y2 bear">$118–130</td>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);">36–38x</td>
+          <td class="td-prob" style="color:var(--bear)">20%</td>
+          <td class="td-thesis">Q4 FY25 repeat. FY27 guide disappoints. Tariff fear + multiple compression. New CEO caution</td>
+        </tr>
+        <tr>
+          <td><span class="td-scenario" style="color:var(--bear)">🐻 Deep Bear</span></td>
+          <td class="td-eod">-8–12%</td>
+          <td class="td-y1 bear">$95–108</td>
+          <td class="td-y2 bear">$100–115</td>
+          <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);">32–35x</td>
+          <td class="td-prob" style="color:var(--bear)">5%</td>
+          <td class="td-thesis">Miss on EPS + revenue + weak guidance. Consumer pullback signals recession. Valuation reset to historical norms</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GROWTH LEVERS -->
+  <div class="section-title" style="padding: 0 0 12px;">💡 Growth Lever Scorecard</div>
+  <div class="levers-grid">
+    <div class="lever-card green">
+      <div class="lever-emoji">🎯</div>
+      <div class="lever-name">Walmart Connect</div>
+      <div class="lever-metric">$5–6B FY26 · Growing 30–53% YoY</div>
+      <div class="lever-bar-track"><div class="lever-bar-fill" style="width:85%"></div></div>
+      <div class="lever-detail">~1/3 of operating income. Track toward $10B+ by FY28. Near-100% gross margin business. Amazon-playbook but earlier inning.</div>
+    </div>
+    <div class="lever-card blue">
+      <div class="lever-emoji">📺</div>
+      <div class="lever-name">VIZIO / CTV Ads</div>
+      <div class="lever-metric">~+20pts incremental ad growth</div>
+      <div class="lever-bar-track"><div class="lever-bar-fill" style="width:60%"></div></div>
+      <div class="lever-detail">SmartCast OS turns 18M+ TV households into closed-loop ad inventory. First-party data moat competitors can't replicate.</div>
+    </div>
+    <div class="lever-card amber">
+      <div class="lever-emoji">🛒</div>
+      <div class="lever-name">Marketplace + WFS</div>
+      <div class="lever-metric">200K+ sellers · WFS +44% YoY</div>
+      <div class="lever-bar-track"><div class="lever-bar-fill" style="width:65%"></div></div>
+      <div class="lever-detail">Double-dip: marketplace fee + ad revenue per seller. Network effect compounds. Fulfillment density drives ad ROI.</div>
+    </div>
+    <div class="lever-card pink">
+      <div class="lever-emoji">🇮🇳</div>
+      <div class="lever-name">PhonePe IPO</div>
+      <div class="lever-metric">$15B target · 72% stake · Mid-2026</div>
+      <div class="lever-bar-track"><div class="lever-bar-fill" style="width:70%"></div></div>
+      <div class="lever-detail">Walmart's ~63% post-IPO stake = ~$9.5B value. Currently receives no P/E credit. Listing catalyst = re-rating event. 9.8B txns/mo, 45% UPI share.</div>
+    </div>
+    <div class="lever-card purple">
+      <div class="lever-emoji">🏪</div>
+      <div class="lever-name">Sam's Club</div>
+      <div class="lever-metric">Membership +7.1% · eComm +22%</div>
+      <div class="lever-bar-track"><div class="lever-bar-fill" style="width:72%"></div></div>
+      <div class="lever-detail">Approaching Costco-like unit economics. Renewal rates at all-time highs. Scan & Go adoption expanding margin profile significantly.</div>
+    </div>
+    <div class="lever-card cyan">
+      <div class="lever-emoji">🚚</div>
+      <div class="lever-name">GoLocal / LocalFinds</div>
+      <div class="lever-metric">DoorDash ($50B TAM) disruptor</div>
+      <div class="lever-bar-track"><div class="lever-bar-fill" style="width:35%"></div></div>
+      <div class="lever-detail">4,700 stores as dark fulfillment hubs. Can subsidize delivery via ad revenue — same model that's killing Instacart's valuation (peak $39B → ~$8B).</div>
+    </div>
+  </div>
+
+  <!-- ANALYST TARGETS -->
+  <div class="price-table-section">
+    <div class="section-title">🏦 Wall Street Analyst Price Targets (Pre-Earnings)</div>
+    <div class="analyst-row">
+      <div class="analyst-chip">
+        <span class="analyst-firm">RBC Capital</span>
+        <span class="analyst-rating buy-rating">Outperform</span>
+        <span class="analyst-pt">$140</span>
+      </div>
+      <div class="analyst-chip">
+        <span class="analyst-firm">BTIG</span>
+        <span class="analyst-rating buy-rating">Buy</span>
+        <span class="analyst-pt">$140</span>
+      </div>
+      <div class="analyst-chip">
+        <span class="analyst-firm">Wells Fargo</span>
+        <span class="analyst-rating buy-rating">Overweight</span>
+        <span class="analyst-pt">$140</span>
+      </div>
+      <div class="analyst-chip">
+        <span class="analyst-firm">Telsey</span>
+        <span class="analyst-rating buy-rating">Outperform</span>
+        <span class="analyst-pt">$135</span>
+      </div>
+      <div class="analyst-chip">
+        <span class="analyst-firm">KeyBanc</span>
+        <span class="analyst-rating buy-rating">Overweight</span>
+        <span class="analyst-pt">$145</span>
+      </div>
+      <div class="analyst-chip">
+        <span class="analyst-firm">Avg Target</span>
+        <span class="analyst-rating buy-rating">Strong Buy</span>
+        <span class="analyst-pt">$140</span>
+      </div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);padding-top:8px;border-top:1px solid var(--border)">
+      Note: Targets pre-earnings. Post-results upgrades likely if guidance beats. Current price ~$126–127 (down ~6% from $134.49 ATH).
+    </div>
+  </div>
+
+  <!-- ACTIVITY LOG -->
+  <div class="log-section">
+    <div class="log-title">
+      <span>🖥</span> Scheduler Log
+      <span id="log-loading" class="spinner" style="margin-left:auto;display:none;"></span>
+    </div>
+    <ul id="log-list">
+      <li><span class="log-time">—</span><span class="log-msg">Initializing...</span></li>
+    </ul>
+  </div>
+
+  <footer>
+    WMT Earnings Intelligence Dashboard · FY2026 Q4 · Auto-refreshes every 5 minutes · Not financial advice
+  </footer>
+
+  </div><!-- /panel-wmt -->
+
+  <!-- ═══════════════════════════════════════════════════
+       EARNINGS TRACKER PANEL
+  ═══════════════════════════════════════════════════ -->
+  <div id="panel-tracker" class="tab-panel" style="display:none">
+
+    <!-- Search hero -->
+    <div class="tracker-hero">
+      <h2>Earnings Tracker</h2>
+      <div class="tracker-sub">Search any ticker · AI-powered analysis · Results cached 6 hours</div>
+      <div class="search-bar">
+        <input
+          type="text"
+          id="tracker-input"
+          class="search-input"
+          placeholder="Enter ticker symbol (e.g. AAPL, NVDA, MSFT)"
+          maxlength="5"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="characters"
+          spellcheck="false"
+        />
+        <button id="tracker-search-btn" class="search-btn" onclick="searchTicker()">⚡ ANALYZE</button>
+      </div>
+      <div class="quick-chips">
+        <button class="quick-chip" onclick="searchTickerDirect('NVDA')">NVDA</button>
+        <button class="quick-chip" onclick="searchTickerDirect('MSFT')">MSFT</button>
+        <button class="quick-chip" onclick="searchTickerDirect('AAPL')">AAPL</button>
+        <button class="quick-chip" onclick="searchTickerDirect('AMZN')">AMZN</button>
+        <button class="quick-chip" onclick="searchTickerDirect('META')">META</button>
+        <button class="quick-chip" onclick="searchTickerDirect('GOOGL')">GOOGL</button>
+        <button class="quick-chip" onclick="searchTickerDirect('TSLA')">TSLA</button>
+        <button class="quick-chip" onclick="searchTickerDirect('CRM')">CRM</button>
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="tracker-loading" class="tracker-loading" style="display:none">
+      <div class="spinner"></div>
+      <span id="tracker-loading-text">Searching earnings data...</span>
+    </div>
+
+    <!-- Error state -->
+    <div id="tracker-error" class="tr-error" style="display:none"></div>
+
+    <!-- Results container (populated by JS) -->
+    <div id="tracker-results" style="display:none"></div>
+
+    <div style="text-align:center;padding:20px 0 8px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:1px;border-top:1px solid var(--border);margin-top:24px">
+      Data sourced via AI web search · Cache TTL 6h · Not financial advice
+    </div>
+
+  </div><!-- /panel-tracker -->
+
+</div>
+
+<script>
+// =============================================
+// STATE
+// =============================================
+const STATE = {
+  earningsReleased: false,
+  lastFetch: null,
+  checkCount: 0,
+  results: null,
+  verdict: null,
+  intervalId: null,
+  countdownId: null,
+
+  // Pre-loaded estimates
+  estimates: {
+    eps: 0.73,
+    revenue: 190.4,   // billions
+    compSales: 4.1,   // %
+    oiGrowth: 10,     // %
+    adGrowth: 30      // %
+  },
+
+  // Current price
+  currentPrice: 126.85,
+  ath: 134.49
+};
+
+// =============================================
+// LOGGING
+// =============================================
+function log(msg, type = '') {
+  const list = document.getElementById('log-list');
+  const now = new Date();
+  const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const li = document.createElement('li');
+  li.innerHTML = `<span class="log-time">${time}</span><span class="log-msg ${type}">${msg}</span>`;
+
+  // Prepend
+  list.insertBefore(li, list.firstChild);
+
+  // Keep max 20 entries
+  while (list.children.length > 20) {
+    list.removeChild(list.lastChild);
+  }
+}
+
+// =============================================
+// COUNTDOWN TIMER
+// =============================================
+function updateCountdown() {
+  const now = new Date();
+
+  // 6am Pacific = 14:00 UTC
+  const release = new Date('2026-02-19T14:00:00Z');
+  const diff = release - now;
+
+  const display = document.getElementById('countdown-display');
+  const sub = document.getElementById('countdown-sub');
+  const section = document.getElementById('countdown-section');
+
+  if (diff <= 0) {
+    // Past release time
+    if (!STATE.earningsReleased) {
+      display.textContent = 'RESULTS LIVE';
+      display.classList.add('complete');
+      section.classList.add('complete');
+      sub.textContent = 'Polling for confirmed data...';
+      updateStatus('live', 'FETCHING');
+    } else {
+      display.textContent = 'DATA LOADED';
+      display.classList.add('complete');
+      sub.textContent = `Last updated: ${new Date(STATE.lastFetch).toLocaleTimeString()}`;
+    }
+  } else {
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    display.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    sub.textContent = `Until scheduled 6:00 AM PT release`;
+  }
+}
+
+// =============================================
+// STATUS BADGE
+// =============================================
+function updateStatus(type, text) {
+  const badge = document.getElementById('status-badge');
+  const statusText = document.getElementById('status-text');
+  badge.className = `status-badge ${type}`;
+  statusText.textContent = text;
+}
+
+// =============================================
+// FETCH EARNINGS RESULTS VIA PROXY
+// =============================================
+async function fetchEarningsViaAI() {
+  const releaseTime = new Date('2026-02-19T14:00:00Z');
+  const now = new Date();
+
+  if (now < releaseTime) {
+    log(`Pre-release window. Earnings due ${releaseTime.toLocaleTimeString()} UTC.`, 'warn');
+    return;
+  }
+
+  STATE.checkCount++;
+  log(`Fetch attempt #${STATE.checkCount} — querying for Q4 FY26 results...`);
+
+  const loadingEl = document.getElementById('log-loading');
+  loadingEl.style.display = 'inline-block';
+
+  try {
+    const response = await fetch('/api/fetch-earnings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ queryType: 'wmt-earnings' }),
+    });
+
+    // Handle rate limiting
+    if (response.status === 429) {
+      const errData = await response.json().catch(() => ({}));
+      const mins = Math.ceil((errData.retryAfterSec || 3600) / 60);
+      log(`Rate limited — try again in ${mins} min.`, 'err');
+      updateStatus('waiting', 'RATE LIMITED');
+      loadingEl.style.display = 'none';
+      return;
+    }
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      log(`Proxy error: ${errData.error || `HTTP ${response.status}`}`, 'err');
+      updateStatus('error', 'ERROR');
+      loadingEl.style.display = 'none';
+      return;
+    }
+
+    // Show remaining requests from rate limit headers
+    const remaining = response.headers.get('X-RateLimit-Remaining');
+    if (remaining !== null) {
+      log(`API call OK — ${remaining} requests remaining this hour.`);
+    }
+
+    const data = await response.json();
+
+    // Extract text blocks from Anthropic response (handles tool_use turns)
+    const textBlocks = (data.content || []).filter(b => b.type === 'text');
+    const fullText = textBlocks.map(b => b.text).join('');
+
+    // Parse JSON result
+    const jsonMatch = fullText.match(/\{[\s\S]*?\}/);
+    if (jsonMatch) {
+      try {
+        const parsed = JSON.parse(jsonMatch[0]);
+
+        if (parsed.data_confirmed) {
+          STATE.earningsReleased = true;
+          STATE.results = parsed;
+          STATE.lastFetch = Date.now();
+
+          log(`✓ Confirmed results — EPS: $${parsed.eps_actual}`, 'ok');
+          renderResults(parsed);
+
+          clearInterval(STATE.intervalId);
+          document.getElementById('criteria-loading').style.display = 'none';
+          updateStatus('live', 'DATA LIVE');
+
+        } else {
+          log(`Results not yet confirmed. Retrying in 5 min.`, 'warn');
+        }
+      } catch (parseErr) {
+        log(`JSON parse error: ${parseErr.message}`, 'err');
+      }
+    } else {
+      log(`No JSON in response. Will retry.`, 'warn');
+    }
+
+  } catch (err) {
+    log(`Network error: ${err.message}`, 'err');
+    updateStatus('error', 'NET ERROR');
+  }
+
+  loadingEl.style.display = 'none';
+}
+
+// =============================================
+// RENDER RESULTS
+// =============================================
+function renderResults(r) {
+  // Show results section
+  const resultsSection = document.getElementById('results-section');
+  resultsSection.classList.add('visible');
+
+  const grid = document.getElementById('results-grid');
+
+  const epsBeat = r.eps_actual >= r.eps_est;
+  const revBeat = r.revenue_actual_b >= r.revenue_est_b;
+  const compBeat = r.comp_sales_pct >= STATE.estimates.compSales;
+  const stockBeat = r.stock_change_pct >= 0;
+
+  grid.innerHTML = `
+    <div class="result-card ${epsBeat ? 'beat' : 'miss'} animate-in">
+      <div class="result-label">Adjusted EPS</div>
+      <div class="result-actual" style="color:${epsBeat ? 'var(--bull)' : 'var(--bear)'}">$${r.eps_actual.toFixed(2)}</div>
+      <div class="result-vs">
+        <span class="result-est">Est: $${r.eps_est}</span>
+        <span class="result-badge ${epsBeat ? 'beat-badge' : 'miss-badge'}">${epsBeat ? '▲ BEAT' : '▼ MISS'} ${Math.abs(((r.eps_actual - r.eps_est)/r.eps_est)*100).toFixed(1)}%</span>
+      </div>
+    </div>
+    <div class="result-card ${revBeat ? 'beat' : 'miss'} animate-in">
+      <div class="result-label">Revenue</div>
+      <div class="result-actual" style="color:${revBeat ? 'var(--bull)' : 'var(--bear)'}">$${r.revenue_actual_b.toFixed(1)}B</div>
+      <div class="result-vs">
+        <span class="result-est">Est: $${r.revenue_est_b}B</span>
+        <span class="result-badge ${revBeat ? 'beat-badge' : 'miss-badge'}">${revBeat ? '▲ BEAT' : '▼ MISS'}</span>
+      </div>
+    </div>
+    <div class="result-card ${compBeat ? 'beat' : 'miss'} animate-in">
+      <div class="result-label">US Comp Sales</div>
+      <div class="result-actual" style="color:${compBeat ? 'var(--bull)' : 'var(--bear)'}">+${r.comp_sales_pct.toFixed(1)}%</div>
+      <div class="result-vs">
+        <span class="result-est">Est: +${STATE.estimates.compSales}%</span>
+        <span class="result-badge ${compBeat ? 'beat-badge' : 'miss-badge'}">${compBeat ? '▲ BEAT' : '▼ MISS'}</span>
+      </div>
+    </div>
+    <div class="result-card ${stockBeat ? 'beat' : 'miss'} animate-in">
+      <div class="result-label">WMT Stock Reaction</div>
+      <div class="result-actual" style="color:${stockBeat ? 'var(--bull)' : 'var(--bear)'}">$${r.stock_current.toFixed(2)}</div>
+      <div class="result-vs">
+        <span class="result-est">Prev: ~$${STATE.currentPrice.toFixed(2)}</span>
+        <span class="result-badge ${stockBeat ? 'beat-badge' : 'miss-badge'}">${r.stock_change_pct >= 0 ? '▲' : '▼'} ${Math.abs(r.stock_change_pct).toFixed(1)}%</span>
+      </div>
+    </div>
+  `;
+
+  // Update criteria
+  updateCriteria(r);
+
+  // Determine verdict
+  determineVerdict(r);
+}
+
+// =============================================
+// UPDATE CRITERIA ITEMS
+// =============================================
+function updateCriteria(r) {
+  const epsBeat = r.eps_actual >= r.eps_est;
+  const revBeat = r.revenue_actual_b >= r.revenue_est_b;
+  const compBeat = r.comp_sales_pct >= 4.1;
+  const oiBeat = r.oi_growth_pct >= 10;
+
+  // Parse FY27 guidance
+  const fy27Match = r.fy27_oi_guidance.match(/(\d+)/g);
+  const fy27Mid = fy27Match ? (parseInt(fy27Match[0]) + parseInt(fy27Match[fy27Match.length-1])) / 2 : 0;
+  const fy27Strong = fy27Mid >= 10;
+
+  const adsBeat = r.ad_growth_pct >= 30;
+
+  setCriteria('c-eps', epsBeat, `Actual: $${r.eps_actual} / Est: $${r.eps_est}`, epsBeat);
+  setCriteria('c-rev', revBeat, `Actual: $${r.revenue_actual_b}B / Est: $190.4B`, revBeat);
+  setCriteria('c-comp', compBeat, `Actual: +${r.comp_sales_pct}% / Est: ~4.1%`, compBeat);
+  setCriteria('c-oi', oiBeat, `OI growth: +${r.oi_growth_pct}%`, oiBeat);
+  setCriteria('c-fy27', fy27Strong, `FY27 guide: ${r.fy27_oi_guidance}`, fy27Strong);
+  setCriteria('c-ads', adsBeat, `Connect growth: +${r.ad_growth_pct}%`, adsBeat);
+
+  document.getElementById('criteria-loading').style.display = 'none';
+}
+
+function setCriteria(id, met, value, isMet) {
+  const el = document.getElementById(id);
+  const valEl = document.getElementById(`${id}-val`);
+  el.classList.remove('pending', 'met', 'not-met');
+  el.classList.add(met ? 'met' : 'not-met');
+  const dot = el.querySelector('.criteria-dot');
+  const tag = el.querySelector('.criteria-tag');
+  tag.textContent = met ? 'MET ✓' : 'MISSED ✗';
+  if (valEl) valEl.textContent = value;
+}
+
+// =============================================
+// DETERMINE VERDICT
+// =============================================
+function determineVerdict(r) {
+  const epsBeat = r.eps_actual >= r.eps_est;
+  const revBeat = r.revenue_actual_b >= r.revenue_est_b;
+  const fy27Match = r.fy27_oi_guidance.match(/(\d+)/g);
+  const fy27Mid = fy27Match ? (parseInt(fy27Match[0]) + parseInt(fy27Match[fy27Match.length-1])) / 2 : 0;
+
+  const banner = document.getElementById('verdict-banner');
+  const title = document.getElementById('verdict-title');
+  const desc = document.getElementById('verdict-desc');
+  const label = document.getElementById('verdict-label');
+
+  banner.classList.add('visible');
+
+  if (epsBeat && revBeat && fy27Mid >= 10 && r.stock_change_pct >= 3) {
+    banner.classList.add('bull-verdict');
+    title.style.color = 'var(--bull)';
+    title.textContent = '🐂 BULL CASE CONFIRMED — Multi-Lever Story Intact';
+    desc.textContent = `WMT beat on all fronts. EPS $${r.eps_actual} vs $${r.eps_est} est. FY27 guidance of ${r.fy27_oi_guidance} OI growth validates the advertising + membership flywheel thesis. PhonePe IPO catalyst still ahead. 2026 target: $140–155.`;
+    updateBullBearProbs(65, 15);
+  } else if (epsBeat && revBeat && fy27Mid >= 7 && r.stock_change_pct >= 0) {
+    banner.classList.add('bull-verdict');
+    title.style.color = 'var(--bull)';
+    title.textContent = '✅ BASE/BULL CASE — Beat but Measured Guidance';
+    desc.textContent = `Solid Q4 beat. Revenue and EPS both cleared the bar. FY27 guidance of ${r.fy27_oi_guidance} OI is slightly below the Street's 11% bogey but reflects typical Walmart conservatism. Stock should consolidate and drift back toward ATH. 2026 target: $132–145.`;
+    updateBullBearProbs(50, 20);
+  } else if (!epsBeat || !revBeat || (fy27Mid > 0 && fy27Mid < 6)) {
+    banner.classList.add('bear-verdict');
+    title.style.color = 'var(--bear)';
+    title.textContent = '🐻 BEAR CASE — Guidance Disappointment / Miss';
+    desc.textContent = `Results or guidance came in below expectations. FY27 guide of ${r.fy27_oi_guidance} OI is well below consensus. At 45x P/E, the bar was high. Expect multiple compression. 2026 downside target: $108–120.`;
+    updateBullBearProbs(20, 55);
+  } else {
+    banner.classList.add('bear-verdict');
+    title.style.color = 'var(--neutral)';
+    title.textContent = '➡️ BASE CASE — In-Line Results';
+    desc.textContent = `Results largely in-line. Beat on some metrics, missed on others. Stock reaction muted. FY27 guidance ${r.fy27_oi_guidance} within long-term algorithm. Watch for post-earnings drift. 2026 range: $125–138.`;
+    updateBullBearProbs(40, 25);
+  }
+}
+
+function updateBullBearProbs(bull, bear) {
+  document.getElementById('bull-prob').textContent = bull + '%';
+  document.getElementById('bear-prob').textContent = bear + '%';
+}
+
+// =============================================
+// MANUAL TRIGGER
+// =============================================
+function triggerFetch() {
+  log('Manual check triggered by user.', 'warn');
+  fetchEarningsViaAI();
+}
+
+// =============================================
+// SCHEDULER
+// =============================================
+function initScheduler() {
+  log('Dashboard initialized. Scheduler active.', 'ok');
+  log(`Cron: 0 6 19 2 * (Pacific) → 6:00 AM PT / 9:00 AM ET / 14:00 UTC`, '');
+  log(`Poll interval: every 5 minutes post-release window`);
+
+  // Countdown
+  STATE.countdownId = setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  const releaseTime = new Date('2026-02-19T14:00:00Z');
+  const now = new Date();
+
+  if (now >= releaseTime) {
+    // Already past release — fetch immediately and then every 5 min
+    log('Release window open. Starting immediate fetch...', 'warn');
+    fetchEarningsViaAI();
+    STATE.intervalId = setInterval(fetchEarningsViaAI, 5 * 60 * 1000);
+  } else {
+    // Schedule the initial fetch at release time
+    const msUntilRelease = releaseTime - now;
+    log(`Waiting ${Math.floor(msUntilRelease/60000)} minutes until release window...`);
+
+    setTimeout(() => {
+      log('🔔 Scheduled release time reached! Firing initial fetch...', 'ok');
+      fetchEarningsViaAI();
+      // Then poll every 5 minutes
+      STATE.intervalId = setInterval(fetchEarningsViaAI, 5 * 60 * 1000);
+    }, msUntilRelease);
+  }
+}
+
+// =============================================
+// TAB SWITCHING
+// =============================================
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabName);
+  });
+  document.getElementById('panel-wmt').style.display     = tabName === 'wmt'     ? '' : 'none';
+  document.getElementById('panel-tracker').style.display = tabName === 'tracker' ? '' : 'none';
+}
+
+// =============================================
+// EARNINGS TRACKER — CACHE
+// =============================================
+const ET_CACHE_PREFIX = 'et_v2_';
+const ET_CACHE_TTL    = 24 * 60 * 60 * 1000; // 24 hours — earnings dates are stable intraday
+
+function etGetCache(ticker) {
+  try {
+    const raw = localStorage.getItem(ET_CACHE_PREFIX + ticker);
+    if (!raw) return null;
+    const entry = JSON.parse(raw);
+    if (Date.now() > entry.expires_at) {
+      localStorage.removeItem(ET_CACHE_PREFIX + ticker);
+      return null;
+    }
+    return entry;
+  } catch { return null; }
+}
+
+function etSetCache(ticker, data) {
+  try {
+    localStorage.setItem(ET_CACHE_PREFIX + ticker, JSON.stringify({
+      ticker,
+      fetched_at: Date.now(),
+      expires_at: Date.now() + ET_CACHE_TTL,
+      data,
+    }));
+  } catch { /* localStorage full or unavailable */ }
+}
+
+function etCacheAge(fetchedAt) {
+  const mins = Math.floor((Date.now() - fetchedAt) / 60000);
+  if (mins < 1)  return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  return `${Math.floor(mins / 60)}h ago`;
+}
+
+// =============================================
+// EARNINGS TRACKER — SEARCH
+// =============================================
+async function searchTicker() {
+  const input = document.getElementById('tracker-input');
+  const raw   = input.value.trim().toUpperCase().replace(/[^A-Z]/g, '');
+  if (!raw || raw.length > 5) {
+    input.classList.add('input-error');
+    setTimeout(() => input.classList.remove('input-error'), 600);
+    return;
+  }
+  await searchTickerDirect(raw);
+}
+
+async function searchTickerDirect(ticker) {
+  ticker = ticker.toUpperCase().replace(/[^A-Z]/g, '');
+  if (!ticker) return;
+  document.getElementById('tracker-input').value = ticker;
+
+  // Cache hit
+  const cached = etGetCache(ticker);
+  if (cached) {
+    etHideLoading();
+    renderTrackerResults(cached.data, true, cached.fetched_at);
+    return;
+  }
+
+  // Show loading
+  etShowLoading(ticker);
+
+  try {
+    const data = await etFetchData(ticker);
+    etHideLoading();
+    if (data && data.data_confirmed) {
+      etSetCache(ticker, data);
+      renderTrackerResults(data, false, Date.now());
+    } else {
+      etShowError(ticker, data?.error || 'No confirmed earnings data found.');
+    }
+  } catch (err) {
+    etHideLoading();
+    etShowError(ticker, err.message);
+  }
+}
+
+function etShowLoading(ticker) {
+  document.getElementById('tracker-results').style.display = 'none';
+  document.getElementById('tracker-error').style.display   = 'none';
+  document.getElementById('tracker-loading-text').textContent = `Searching earnings data for ${ticker}...`;
+  document.getElementById('tracker-loading').style.display = 'flex';
+  document.getElementById('tracker-search-btn').disabled   = true;
+}
+
+function etHideLoading() {
+  document.getElementById('tracker-loading').style.display = 'none';
+  document.getElementById('tracker-search-btn').disabled   = false;
+}
+
+function etShowError(ticker, msg) {
+  document.getElementById('tracker-results').style.display = 'none';
+  const errEl = document.getElementById('tracker-error');
+  errEl.style.display = 'block';
+  errEl.innerHTML = `
+    <div style="font-size:15px;margin-bottom:8px">⚠ No data found for <strong>${escHtml(ticker)}</strong></div>
+    <div style="font-size:11px;color:var(--text3)">${escHtml(msg || 'Try a different ticker symbol.')}</div>
+  `;
+}
+
+async function etFetchData(ticker) {
+  const resp = await fetch('/api/earnings-tracker', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ticker, queryType: 'earnings-tracker' }),
+  });
+
+  if (resp.status === 429) {
+    const d = await resp.json().catch(() => ({}));
+    throw new Error(`Rate limited — retry in ${Math.ceil((d.retryAfterSec || 3600) / 60)} min.`);
+  }
+
+  if (!resp.ok) {
+    const d = await resp.json().catch(() => ({}));
+    throw new Error(d.error || `Server error (${resp.status})`);
+  }
+
+  const raw = await resp.json();
+
+  // ── Server-side Blob cache hit — data arrives pre-parsed ──────────────────
+  if (raw._fromCache) {
+    return raw; // already a plain earnings object, pass straight through
+  }
+
+  // ── Fresh Anthropic response — extract JSON from content blocks ───────────
+  // Extract text from Anthropic response (may include tool_use turns)
+  const textBlocks = (raw.content || []).filter(b => b.type === 'text');
+  const fullText   = textBlocks.map(b => b.text).join('\n');
+
+  // Strip markdown code fences if Claude wrapped the JSON (e.g. ```json ... ```)
+  const stripped = fullText.replace(/```(?:json)?\s*/gi, '').trim();
+
+  // Find outermost JSON object using bracket-depth matching.
+  // Scans the full joined text so it works even when the model splits
+  // its response across multiple text blocks.
+  const start = stripped.indexOf('{');
+  if (start === -1) throw new Error('Could not parse response.');
+
+  let depth = 0, inString = false, escape = false, end = -1;
+  for (let i = start; i < stripped.length; i++) {
+    const ch = stripped[i];
+    if (escape)               { escape = false; continue; }
+    if (ch === '\\' && inString) { escape = true; continue; }
+    if (ch === '"')           { inString = !inString; continue; }
+    if (inString)             continue;
+    if (ch === '{')           depth++;
+    else if (ch === '}')      { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end === -1) throw new Error('Response was cut off — please try again.');
+
+  return JSON.parse(stripped.slice(start, end + 1));
+}
+
+// =============================================
+// EARNINGS TRACKER — RENDER
+// =============================================
+function renderTrackerResults(data, fromCache, fetchedAt) {
+  document.getElementById('tracker-error').style.display = 'none';
+  const resultsEl = document.getElementById('tracker-results');
+  resultsEl.style.display = 'block';
+
+  const cacheBadge = fromCache
+    ? `<span class="cache-badge cached">⊙ Cached ${escHtml(etCacheAge(fetchedAt))}</span>`
+    : `<span class="cache-badge live">⚡ Live</span>`;
+
+  const countdown  = calcEarningsCountdown(data.next_earnings_date);
+  const timeCls    = (data.earnings_time || '').toLowerCase() === 'bmo' ? 'bmo' : 'amc';
+  const timeBadge  = data.earnings_time
+    ? `<span class="tr-badge ${timeCls}">${escHtml(data.earnings_time)}</span>` : '';
+  const conColor   = getConsensusColor(data.analyst_consensus);
+
+  let upsideHtml = '';
+  if (data.avg_price_target && data.current_price) {
+    const pct = ((data.avg_price_target - data.current_price) / data.current_price * 100).toFixed(1);
+    const col = pct >= 0 ? 'var(--bull)' : 'var(--bear)';
+    upsideHtml = `<span style="color:${col};font-family:'DM Mono',monospace;font-size:12px;margin-left:8px;">${pct >= 0 ? '+' : ''}${pct}%</span>`;
+  }
+
+  const analystChipsHtml = (data.analyst_targets || []).slice(0, 5).map(a => `
+    <div class="analyst-chip">
+      <span class="analyst-firm">${escHtml(a.firm || '')}</span>
+      <span class="analyst-rating buy-rating">${escHtml(a.rating || '')}</span>
+      <span class="analyst-pt">$${escHtml(String(a.target || '—'))}</span>
+    </div>`).join('');
+
+  const metricsHtml = (data.key_metrics || []).map(m => `
+    <div class="tr-metric-card">
+      <div class="tr-metric-name">${escHtml(m.name || '')}</div>
+      <div class="tr-metric-est">${escHtml(m.estimate || '')}</div>
+      <div class="tr-metric-context">${escHtml(m.context || '')}</div>
+    </div>`).join('');
+
+  const bullHtml = (data.bull_triggers || []).map(t => `
+    <li>
+      <div class="check-icon bull-check">✓</div>
+      <div style="color:var(--text2);font-size:13px;line-height:1.5">${escHtml(t)}</div>
+    </li>`).join('');
+
+  const bearHtml = (data.bear_risks || []).map(r => `
+    <li>
+      <div class="check-icon bear-check">✗</div>
+      <div style="color:var(--text2);font-size:13px;line-height:1.5">${escHtml(r)}</div>
+    </li>`).join('');
+
+  const epsSubHtml = data.eps_prior_year != null
+    ? `vs $${(+data.eps_prior_year).toFixed(2)} prior yr` : 'consensus est.';
+  const revSubHtml = data.revenue_prior_year_b != null
+    ? `vs $${(+data.revenue_prior_year_b).toFixed(1)}B prior yr` : 'consensus est.';
+  const impliedHtml = data.implied_move_pct != null
+    ? `±${(+data.implied_move_pct).toFixed(1)}%` : '—';
+
+  resultsEl.innerHTML = `
+    <!-- ── Header ── -->
+    <div class="tr-result-header">
+      <div class="tr-ticker-block">
+        <div>
+          <div class="tr-ticker-symbol">${escHtml(data.ticker || '')}</div>
+          <div class="tr-company-name">${escHtml(data.company_name || '')}</div>
+        </div>
+      </div>
+      <div class="tr-meta-block">
+        ${data.quarter ? `<span class="tr-badge quarter">${escHtml(data.quarter)}</span>` : ''}
+        ${data.next_earnings_date ? `<span class="tr-badge date">${formatEarningsDate(data.next_earnings_date)}</span>` : ''}
+        ${timeBadge}
+        ${cacheBadge}
+        <button class="refresh-btn" onclick="etRefresh('${escHtml(data.ticker || '')}')">↻ Refresh</button>
+      </div>
+    </div>
+
+    <!-- ── Stats grid ── -->
+    <div class="tr-stats-grid">
+      <div class="tr-stat-card countdown">
+        <div class="tr-stat-label">Earnings In</div>
+        <div class="tr-stat-value">${countdown}</div>
+        <div class="tr-stat-sub">${escHtml(data.next_earnings_date || 'TBD')}</div>
+      </div>
+      <div class="tr-stat-card">
+        <div class="tr-stat-label">EPS Est.</div>
+        <div class="tr-stat-value">${data.eps_estimate != null ? '$' + (+data.eps_estimate).toFixed(2) : '—'}</div>
+        <div class="tr-stat-sub">${epsSubHtml}</div>
+      </div>
+      <div class="tr-stat-card">
+        <div class="tr-stat-label">Revenue Est.</div>
+        <div class="tr-stat-value">${data.revenue_estimate_b != null ? '$' + (+data.revenue_estimate_b).toFixed(1) + 'B' : '—'}</div>
+        <div class="tr-stat-sub">${revSubHtml}</div>
+      </div>
+      <div class="tr-stat-card implied">
+        <div class="tr-stat-label">Implied Move</div>
+        <div class="tr-stat-value">${impliedHtml}</div>
+        <div class="tr-stat-sub">options pricing</div>
+      </div>
+    </div>
+
+    <!-- ── Analyst section ── -->
+    <div class="tr-analyst-section">
+      <div class="tr-consensus-block">
+        <div class="tr-consensus-label">Consensus</div>
+        <div class="tr-consensus-value" style="color:${conColor}">${escHtml(data.analyst_consensus || '—')}</div>
+      </div>
+      ${data.avg_price_target ? `
+      <div class="tr-pt-block">
+        <div class="tr-consensus-label">Avg PT</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text)">$${escHtml(String(data.avg_price_target))}${upsideHtml}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">vs $${data.current_price != null ? (+data.current_price).toFixed(2) : '—'} current</div>
+      </div>` : ''}
+      ${analystChipsHtml ? `<div class="tr-analyst-chips">${analystChipsHtml}</div>` : ''}
+    </div>
+
+    <!-- ── Bull / Bear ── -->
+    <div class="main-grid" style="margin-bottom:16px">
+      <div class="scenario-card bull-card">
+        <div class="scenario-header bull-header">
+          <div class="scenario-title">
+            <span class="scenario-icon">🐂</span>
+            <span class="scenario-name">BULL TRIGGERS</span>
+          </div>
+        </div>
+        <div class="scenario-body">
+          <ul class="checklist">${bullHtml}</ul>
+        </div>
+      </div>
+      <div class="scenario-card bear-card">
+        <div class="scenario-header bear-header">
+          <div class="scenario-title">
+            <span class="scenario-icon">🐻</span>
+            <span class="scenario-name">BEAR RISKS</span>
+          </div>
+        </div>
+        <div class="scenario-body">
+          <ul class="checklist">${bearHtml}</ul>
+        </div>
+      </div>
+    </div>
+
+    ${metricsHtml ? `
+    <!-- ── Key metrics ── -->
+    <div class="price-table-section" style="margin-bottom:0">
+      <div class="section-title">📊 Key Metrics to Watch</div>
+      <div class="tr-metrics-grid">${metricsHtml}</div>
+    </div>` : ''}
+  `;
+}
+
+// ── Helpers ──────────────────────────────────────────────
+
+function calcEarningsCountdown(dateStr) {
+  if (!dateStr) return '—';
+  try {
+    const target = new Date(dateStr + 'T16:00:00Z'); // ~market close
+    const diff   = target - Date.now();
+    if (diff < 0) return 'REPORTED';
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    if (days > 0) return `${days}d ${hours}h`;
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    return hours > 0 ? `${hours}h ${mins}m` : 'TODAY';
+  } catch { return '—'; }
+}
+
+function formatEarningsDate(dateStr) {
+  try {
+    return new Date(dateStr + 'T00:00:00Z').toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
+    });
+  } catch { return dateStr; }
+}
+
+function getConsensusColor(c) {
+  if (!c) return 'var(--text2)';
+  const l = c.toLowerCase();
+  if (l.includes('strong buy') || l.includes('buy') || l.includes('outperform') || l.includes('overweight')) return 'var(--bull)';
+  if (l.includes('hold') || l.includes('neutral') || l.includes('market perform')) return 'var(--neutral)';
+  if (l.includes('sell') || l.includes('underperform') || l.includes('underweight')) return 'var(--bear)';
+  return 'var(--text2)';
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function etRefresh(ticker) {
+  localStorage.removeItem(ET_CACHE_PREFIX + ticker);
+  document.getElementById('tracker-results').style.display = 'none';
+  searchTickerDirect(ticker);
+}
+
+// =============================================
+// ANIMATE LEVER BARS ON LOAD
+// =============================================
+function animateLeverBars() {
+  const fills = document.querySelectorAll('.lever-bar-fill');
+  fills.forEach(fill => {
+    const targetWidth = fill.style.width;
+    fill.style.width = '0%';
+    setTimeout(() => {
+      fill.style.width = targetWidth;
+    }, 300);
+  });
+}
+
+// =============================================
+// INIT
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  animateLeverBars();
+  initScheduler();
+
+  // Enter key for tracker search input
+  const trackerInput = document.getElementById('tracker-input');
+  if (trackerInput) {
+    trackerInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') searchTicker();
+    });
+  }
+});
+</script>
+
+</body>
+</html>

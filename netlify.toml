@@ -1,0 +1,42 @@
+# netlify.toml
+# Deploy config for WMT Earnings Intelligence dashboard
+
+[build]
+  command = ""
+  publish = "."           # root is the static site (index.html lives here)
+  functions = "netlify/functions"
+
+# ── Security headers ─────────────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# ── Function-specific settings ───────────────────────────────────────────────
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["netlify/functions/config.js"]
+
+# ── Scheduled function: WMT earnings auto-refresh ────────────────────────────
+# Runs every 15 min from 8:45 AM–11 AM ET on Feb 19 (WMT earnings day / BMO)
+# Toggle without redeploying: set ENABLE_WMT_CRON = true | false in Netlify UI
+[functions."fetch-earnings-scheduled"]
+  schedule = "*/15 13-16 19 2 *"
+
+# ── Redirect /api/fetch-earnings → the function ──────────────────────────────
+# This lets the HTML call a clean path instead of /.netlify/functions/...
+[[redirects]]
+  from = "/api/fetch-earnings"
+  to = "/.netlify/functions/fetch-earnings"
+  status = 200
+
+[[redirects]]
+  from = "/api/earnings-tracker"
+  to = "/.netlify/functions/earnings-tracker"
+  status = 200
+
+# ── Environment variable reminder (set these in Netlify UI, NOT here) ────────
+# ANTHROPIC_API_KEY = "sk-ant-..."   ← Set in: Site config > Environment variables

@@ -20,8 +20,9 @@ function getBlobStore() {
   // @netlify/blobs v10 reads credentials from NETLIFY_BLOBS_CONTEXT env var,
   // which Netlify sets automatically in production Lambda environments.
   // For local dev, we pass siteID + token from .env explicitly.
-  // The AWS Lambda `context` object is NOT used by this library — drop it.
-  const opts = { name: 'earnings-tracker-cache', consistency: 'strong' };
+  // Use 'eventual' consistency — 'strong' requires uncachedEdgeURL which is
+  // not always injected (and we don't need write-then-read consistency here).
+  const opts = { name: 'earnings-tracker-cache', consistency: 'eventual' };
   if (process.env.NETLIFY_SITE_ID) opts.siteID = process.env.NETLIFY_SITE_ID;
   if (process.env.NETLIFY_TOKEN)   opts.token  = process.env.NETLIFY_TOKEN;
   return getStore(opts);

@@ -51,7 +51,7 @@ const entries = [
 async function seed() {
   const store = getStore({
     name:        'earnings-tracker-cache',
-    consistency: 'strong',
+    consistency: 'eventual',
     siteID:      SITE_ID,
     token:       TOKEN,
   });

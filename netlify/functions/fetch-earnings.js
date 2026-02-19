@@ -24,8 +24,9 @@ const WMT_BLOB_KEY = 'wmt-earnings-latest';
 function getWmtStore() {
   // @netlify/blobs v10 reads NETLIFY_BLOBS_CONTEXT automatically in production.
   // For local dev, pass siteID + token from .env explicitly.
-  // The AWS Lambda context object is NOT used by this library.
-  const opts = { name: 'wmt-earnings-cache', consistency: 'strong' };
+  // Use 'eventual' consistency — 'strong' requires uncachedEdgeURL which is
+  // not always injected and is unnecessary for a shared read cache.
+  const opts = { name: 'wmt-earnings-cache', consistency: 'eventual' };
   if (process.env.NETLIFY_SITE_ID) opts.siteID = process.env.NETLIFY_SITE_ID;
   if (process.env.NETLIFY_TOKEN)   opts.token  = process.env.NETLIFY_TOKEN;
   return getStore(opts);

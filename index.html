@@ -1866,24 +1866,36 @@ async function fetchEarningsViaAI() {
 
     const data = await response.json();
 
-    // Response is a flat JSON object from the GitHub Models-backed function.
-    // Blob cache hits return the same shape — no content-block extraction needed.
-    if (data.data_confirmed) {
-      STATE.earningsReleased = true;
-      STATE.results = data;
-      STATE.lastFetch = Date.now();
+    // Extract text blocks from Anthropic response (handles tool_use turns)
+    const textBlocks = (data.content || []).filter(b => b.type === 'text');
+    const fullText = textBlocks.map(b => b.text).join('');
 
-      log(`✓ Confirmed results — EPS: $${data.eps_actual}`, 'ok');
-      renderResults(data);
+    // Parse JSON result
+    const jsonMatch = fullText.match(/\{[\s\S]*?\}/);
+    if (jsonMatch) {
+      try {
+        const parsed = JSON.parse(jsonMatch[0]);
 
-      clearInterval(STATE.intervalId);
-      document.getElementById('criteria-loading').style.display = 'none';
-      updateStatus('live', 'DATA LIVE');
+        if (parsed.data_confirmed) {
+          STATE.earningsReleased = true;
+          STATE.results = parsed;
+          STATE.lastFetch = Date.now();
 
-    } else if (data.data_confirmed === false) {
-      log(`Results not yet confirmed. Retrying in 5 min.`, 'warn');
+          log(`✓ Confirmed results — EPS: $${parsed.eps_actual}`, 'ok');
+          renderResults(parsed);
+
+          clearInterval(STATE.intervalId);
+          document.getElementById('criteria-loading').style.display = 'none';
+          updateStatus('live', 'DATA LIVE');
+
+        } else {
+          log(`Results not yet confirmed. Retrying in 5 min.`, 'warn');
+        }
+      } catch (parseErr) {
+        log(`JSON parse error: ${parseErr.message}`, 'err');
+      }
     } else {
-      log(`Unexpected response shape. Will retry.`, 'warn');
+      log(`No JSON in response. Will retry.`, 'warn');
     }
 
   } catch (err) {
@@ -2213,11 +2225,38 @@ async function etFetchData(ticker) {
 
   const raw = await resp.json();
 
-  // Both cache hits and fresh GitHub Models responses return a flat earnings object.
-  // The server parses the AI response before writing to the Blob cache, so
-  // no client-side content-block extraction is needed.
-  if (raw.error) throw new Error(raw.error);
-  return raw;
+  // ── Server-side Blob cache hit — data arrives pre-parsed ──────────────────
+  if (raw._fromCache) {
+    return raw; // already a plain earnings object, pass straight through
+  }
+
+  // ── Fresh Anthropic response — extract JSON from content blocks ───────────
+  // Extract text from Anthropic response (may include tool_use turns)
+  const textBlocks = (raw.content || []).filter(b => b.type === 'text');
+  const fullText   = textBlocks.map(b => b.text).join('\n');
+
+  // Strip markdown code fences if Claude wrapped the JSON (e.g. ```json ... ```)
+  const stripped = fullText.replace(/```(?:json)?\s*/gi, '').trim();
+
+  // Find outermost JSON object using bracket-depth matching.
+  // Scans the full joined text so it works even when the model splits
+  // its response across multiple text blocks.
+  const start = stripped.indexOf('{');
+  if (start === -1) throw new Error('Could not parse response.');
+
+  let depth = 0, inString = false, escape = false, end = -1;
+  for (let i = start; i < stripped.length; i++) {
+    const ch = stripped[i];
+    if (escape)               { escape = false; continue; }
+    if (ch === '\\' && inString) { escape = true; continue; }
+    if (ch === '"')           { inString = !inString; continue; }
+    if (inString)             continue;
+    if (ch === '{')           depth++;
+    else if (ch === '}')      { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end === -1) throw new Error('Response was cut off — please try again.');
+
+  return JSON.parse(stripped.slice(start, end + 1));
 }
 
 // =============================================

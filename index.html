@@ -1316,7 +1316,7 @@
     <div>
       <div class="countdown-label">📅 Earnings Window</div>
       <div style="font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text2);">
-        Release: 6:00 AM CT · Call: 7:00 AM CT
+        Release: 4:00 AM PT / 6:00 AM CT · Call: 7:00 AM CT
       </div>
       <div style="font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text3); margin-top: 4px;">
         Market open: 9:30 AM ET
@@ -1775,8 +1775,8 @@ function log(msg, type = '') {
 function updateCountdown() {
   const now = new Date();
 
-  // 6am Pacific = 14:00 UTC
-  const release = new Date('2026-02-19T14:00:00Z');
+  // 4am Pacific = 12:00 UTC
+  const release = new Date('2026-02-19T12:00:00Z');
   const diff = release - now;
 
   const display = document.getElementById('countdown-display');
@@ -1801,7 +1801,7 @@ function updateCountdown() {
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
     display.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    sub.textContent = `Until scheduled 6:00 AM PT release`;
+    sub.textContent = `Until scheduled 4:00 AM PT release`;
   }
 }
 
@@ -1819,7 +1819,7 @@ function updateStatus(type, text) {
 // FETCH EARNINGS RESULTS VIA PROXY
 // =============================================
 async function fetchEarningsViaAI() {
-  const releaseTime = new Date('2026-02-19T14:00:00Z');
+  const releaseTime = new Date('2026-02-19T12:00:00Z');
   const now = new Date();
 
   if (now < releaseTime) {
@@ -2061,14 +2061,14 @@ function triggerFetch() {
 // =============================================
 function initScheduler() {
   log('Dashboard initialized. Scheduler active.', 'ok');
-  log(`Cron: 0 6 19 2 * (Pacific) → 6:00 AM PT / 9:00 AM ET / 14:00 UTC`, '');
+  log(`Cron: 0 4 19 2 * (Pacific) → 4:00 AM PT / 6:00 AM CT / 7:00 AM ET / 12:00 UTC`, '');
   log(`Poll interval: every 5 minutes post-release window`);
 
   // Countdown
   STATE.countdownId = setInterval(updateCountdown, 1000);
   updateCountdown();
 
-  const releaseTime = new Date('2026-02-19T14:00:00Z');
+  const releaseTime = new Date('2026-02-19T12:00:00Z');
   const now = new Date();
 
   if (now >= releaseTime) {

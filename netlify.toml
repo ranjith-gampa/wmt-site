@@ -38,5 +38,15 @@
   to = "/.netlify/functions/earnings-tracker"
   status = 200
 
+[[redirects]]
+  from = "/api/auth-config"
+  to = "/.netlify/functions/auth-config"
+  status = 200
+
+[[redirects]]
+  from = "/api/auth-verify"
+  to = "/.netlify/functions/auth-verify"
+  status = 200
+
 # ── Environment variable reminder (set these in Netlify UI, NOT here) ────────
 # ANTHROPIC_API_KEY = "sk-ant-..."   ← Set in: Site config > Environment variables

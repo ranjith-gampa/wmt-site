@@ -1277,7 +1277,304 @@
     .search-bar { flex-direction: column; }
     .search-btn { width: 100%; }
   }
+
+  /* ─── AUTH ───────────────────────────────────────────── */
+  .auth-nav-area {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    padding-bottom: 1px;
+  }
+
+  .auth-signin-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .auth-signin-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .auth-user-btn {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 5px 12px 5px 6px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .auth-user-btn:hover { border-color: var(--accent2); color: var(--text); }
+
+  .auth-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+    border: 1px solid var(--border2);
+  }
+
+  .auth-avatar-placeholder {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #070a0f;
+    flex-shrink: 0;
+  }
+
+  .auth-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    min-width: 200px;
+    z-index: 1000;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    overflow: hidden;
+  }
+
+  .auth-dropdown-user {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .auth-dropdown-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 168px;
+  }
+
+  .auth-dropdown-email {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 168px;
+  }
+
+  .auth-dropdown-provider {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text3);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .auth-dropdown-signout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    color: var(--bear);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+
+  .auth-dropdown-signout:hover { background: rgba(255,68,102,0.08); }
+
+  /* Auth modal */
+  .auth-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(7,10,15,0.85);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .auth-modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    padding: 32px 28px;
+    width: 340px;
+    max-width: calc(100vw - 32px);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    position: relative;
+  }
+
+  .auth-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    transition: color 0.15s;
+  }
+
+  .auth-modal-close:hover { color: var(--text); }
+
+  .auth-modal-logo {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .auth-modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .auth-modal-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text3);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .auth-provider-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+    border: 1px solid;
+  }
+
+  .auth-provider-btn.google {
+    background: #fff;
+    border-color: #dadce0;
+    color: #3c4043;
+  }
+
+  .auth-provider-btn.google:hover { background: #f8f9fa; box-shadow: 0 1px 6px rgba(0,0,0,0.2); }
+
+  .auth-provider-btn.apple {
+    background: #000;
+    border-color: #333;
+    color: #fff;
+  }
+
+  .auth-provider-btn.apple:hover { background: #111; }
+
+  .auth-provider-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  /* Hidden Google GSI button container — used to render a real button */
+  #google-signin-btn-container {
+    display: none;
+  }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0 14px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .auth-divider::before,
+  .auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .auth-error {
+    display: none;
+    background: rgba(255,68,102,0.1);
+    border: 1px solid rgba(255,68,102,0.3);
+    border-radius: 6px;
+    color: var(--bear);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 8px 12px;
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .auth-disclaimer {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    margin-top: 20px;
+    line-height: 1.5;
+  }
 </style>
+
+<!-- Google Identity Services SDK (loaded async — won't block page render) -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- Apple Sign In JS SDK -->
+<script src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js" async defer></script>
 </head>
 <body>
 
@@ -1287,7 +1584,76 @@
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="wmt" onclick="switchTab('wmt')">⊞ WMT Dashboard</button>
     <button class="tab-btn" data-tab="tracker" onclick="switchTab('tracker')">⚡ Earnings Tracker</button>
+
+    <!-- Auth area -->
+    <div class="auth-nav-area">
+      <!-- Sign-in button (shown when logged out) -->
+      <button id="auth-signin-btn" class="auth-signin-btn" onclick="showAuthModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Sign In
+      </button>
+
+      <!-- User button (shown when logged in) -->
+      <div id="auth-user-btn" class="auth-user-btn" onclick="toggleAuthDropdown()">
+        <img id="auth-avatar" class="auth-avatar" src="" alt="Avatar">
+        <div id="auth-avatar-placeholder" class="auth-avatar-placeholder"></div>
+        <span id="auth-user-name" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M1 3l4 4 4-4"/></svg>
+
+        <!-- Dropdown -->
+        <div id="auth-dropdown" class="auth-dropdown" onclick="event.stopPropagation()">
+          <div class="auth-dropdown-user">
+            <div id="auth-dropdown-name" class="auth-dropdown-name"></div>
+            <div id="auth-dropdown-email" class="auth-dropdown-email"></div>
+            <span id="auth-dropdown-provider" class="auth-dropdown-provider"></span>
+          </div>
+          <button class="auth-dropdown-signout" onclick="signOut()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
   </nav>
+
+  <!-- AUTH MODAL -->
+  <div id="auth-modal-overlay" class="auth-modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="auth-modal">
+      <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Close">✕</button>
+      <div class="auth-modal-logo">📈</div>
+      <div class="auth-modal-title">Sign in</div>
+      <div class="auth-modal-sub">Access WMT Earnings Intelligence with your Google or Apple account.</div>
+
+      <!-- Google sign-in -->
+      <button id="auth-google-btn" class="auth-provider-btn google" onclick="signInWithGoogle()">
+        <svg class="auth-provider-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <!-- Apple sign-in -->
+      <button id="auth-apple-btn" class="auth-provider-btn apple" onclick="signInWithApple()">
+        <svg class="auth-provider-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="white">
+          <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.42c1.3.07 2.2.74 2.97.8.93-.16 1.83-.84 2.74-.77 1.39.14 2.43.79 3.09 1.98-2.84 1.69-2.31 5.41.47 6.5-.56 1.48-1.31 2.95-2.27 4.35zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+        </svg>
+        Continue with Apple
+      </button>
+
+      <!-- Hidden container that Google GSI uses when rendering its own button -->
+      <div id="google-signin-btn-container"></div>
+
+      <div id="auth-error" class="auth-error"></div>
+
+      <div class="auth-disclaimer">
+        By signing in you agree to our terms of service.<br>
+        Your data is never sold or shared.
+      </div>
+    </div>
+  </div>
 
   <div id="panel-wmt" class="tab-panel">
 
@@ -2477,6 +2843,7 @@ function animateLeverBars() {
 document.addEventListener('DOMContentLoaded', () => {
   animateLeverBars();
   initScheduler();
+  initAuth();
 
   // Enter key for tracker search input
   const trackerInput = document.getElementById('tracker-input');
@@ -2486,6 +2853,272 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// =============================================
+// AUTH
+// =============================================
+const AUTH_STORAGE_KEY = 'wmt_auth_user';
+let authConfig  = null;
+let currentUser = null;
+
+async function initAuth() {
+  // Restore persisted session
+  try {
+    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (stored) {
+      currentUser = JSON.parse(stored);
+      updateAuthUI();
+    }
+  } catch (e) { /* ignore corrupt data */ }
+
+  // Fetch public client IDs from the server
+  try {
+    const resp = await fetch('/api/auth-config');
+    if (resp.ok) {
+      authConfig = await resp.json();
+      // Initialise Apple SDK as soon as config is available
+      initAppleSignIn();
+    }
+  } catch (e) {
+    console.warn('[auth] Could not load auth config:', e.message);
+  }
+}
+
+// Called by the Google GSI SDK once the script loads
+function initGoogleSignIn() {
+  if (!authConfig?.googleClientId || !window.google?.accounts?.id) return;
+  window.google.accounts.id.initialize({
+    client_id:   authConfig.googleClientId,
+    callback:    handleGoogleCredential,
+    auto_select: false,
+    cancel_on_tap_outside: true,
+  });
+}
+
+function initAppleSignIn() {
+  if (!authConfig?.appleClientId || !window.AppleID) return;
+  try {
+    window.AppleID.auth.init({
+      clientId:    authConfig.appleClientId,
+      scope:       'name email',
+      redirectURI: authConfig.appleRedirectUri || window.location.origin,
+      usePopup:    true,
+    });
+  } catch (e) {
+    console.warn('[auth] Apple SDK init error:', e.message);
+  }
+}
+
+function showAuthModal() {
+  document.getElementById('auth-modal-overlay').style.display = 'flex';
+  document.getElementById('auth-error').style.display = 'none';
+
+  // Initialise Google Sign-In if SDK has loaded by now
+  if (window.google?.accounts?.id && authConfig?.googleClientId) {
+    initGoogleSignIn();
+  }
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal-overlay').style.display = 'none';
+  // Hide fallback Google button container so it doesn't persist on re-open
+  const container = document.getElementById('google-signin-btn-container');
+  if (container) { container.style.display = 'none'; container.innerHTML = ''; }
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('auth-modal-overlay')) closeAuthModal();
+}
+
+async function signInWithGoogle() {
+  if (!authConfig?.googleClientId) {
+    showAuthError('Google Sign-In is not configured. Set GOOGLE_CLIENT_ID in Netlify environment variables.');
+    return;
+  }
+  if (!window.google?.accounts?.id) {
+    showAuthError('Google SDK is still loading. Please try again in a moment.');
+    return;
+  }
+  // Prompt the One-Tap / popup flow
+  window.google.accounts.id.prompt((notification) => {
+    if (notification.isSkippedMoment() || notification.isDismissedMoment()) {
+      // Fall back to the rendered button approach — show the hidden container
+      const container = document.getElementById('google-signin-btn-container');
+      container.style.display = 'block';
+      window.google.accounts.id.renderButton(container, {
+        theme: 'filled_black',
+        size:  'large',
+        width: 284,
+        text:  'continue_with',
+      });
+    }
+  });
+}
+
+async function handleGoogleCredential(response) {
+  closeAuthModal();
+  setAuthLoading(true);
+  try {
+    const verifyResp = await fetch('/api/auth-verify', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ provider: 'google', token: response.credential }),
+    });
+    if (!verifyResp.ok) {
+      const err = await verifyResp.json().catch(() => ({}));
+      throw new Error(err.error || 'Verification failed');
+    }
+    const { user } = await verifyResp.json();
+    setCurrentUser(user);
+  } catch (err) {
+    console.error('[auth] Google sign-in error:', err);
+    showAuthModal();
+    showAuthError('Google sign-in failed: ' + err.message);
+  } finally {
+    setAuthLoading(false);
+  }
+}
+
+async function signInWithApple() {
+  if (!authConfig?.appleClientId) {
+    showAuthError('Apple Sign-In is not configured. Set APPLE_CLIENT_ID in Netlify environment variables.');
+    return;
+  }
+  if (!window.AppleID) {
+    showAuthError('Apple SDK is still loading. Please try again in a moment.');
+    return;
+  }
+  try {
+    const appleResp = await window.AppleID.auth.signIn();
+    closeAuthModal();
+    setAuthLoading(true);
+
+    const verifyResp = await fetch('/api/auth-verify', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ provider: 'apple', token: appleResp.authorization.id_token }),
+    });
+    if (!verifyResp.ok) {
+      const err = await verifyResp.json().catch(() => ({}));
+      throw new Error(err.error || 'Verification failed');
+    }
+    const { user } = await verifyResp.json();
+
+    // Apple only sends name data on the very first sign-in
+    if (appleResp.user?.name) {
+      const { firstName = '', lastName = '' } = appleResp.user.name;
+      user.name = `${firstName} ${lastName}`.trim() || user.name;
+    }
+    setCurrentUser(user);
+  } catch (err) {
+    if (err?.error === 'popup_closed_by_user' || err?.error === 'user_cancelled_authorize') return;
+    console.error('[auth] Apple sign-in error:', err);
+    showAuthModal();
+    showAuthError('Apple sign-in failed: ' + (err.message || err.error || 'Unknown error'));
+  } finally {
+    setAuthLoading(false);
+  }
+}
+
+function setCurrentUser(user) {
+  currentUser = user;
+  // Store only display-safe fields — never store raw tokens in localStorage
+  const minimal = {
+    provider: user.provider,
+    id:       user.id,
+    name:     user.name,
+    email:    user.email,
+    picture:  user.picture,
+  };
+  try { localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(minimal)); } catch (e) {}
+  updateAuthUI();
+}
+
+function signOut() {
+  currentUser = null;
+  try { localStorage.removeItem(AUTH_STORAGE_KEY); } catch (e) {}
+  // Revoke Google session if applicable
+  if (window.google?.accounts?.id) window.google.accounts.id.disableAutoSelect();
+  updateAuthUI();
+  closeAuthDropdown();
+}
+
+function updateAuthUI() {
+  const signInBtn     = document.getElementById('auth-signin-btn');
+  const userBtn       = document.getElementById('auth-user-btn');
+  const avatarImg     = document.getElementById('auth-avatar');
+  const avatarPh      = document.getElementById('auth-avatar-placeholder');
+  const userNameEl    = document.getElementById('auth-user-name');
+  const ddName        = document.getElementById('auth-dropdown-name');
+  const ddEmail       = document.getElementById('auth-dropdown-email');
+  const ddProvider    = document.getElementById('auth-dropdown-provider');
+
+  if (!signInBtn || !userBtn) return;
+
+  if (currentUser) {
+    signInBtn.style.display = 'none';
+    userBtn.style.display   = 'flex';
+
+    const displayName = currentUser.name || currentUser.email?.split('@')[0] || 'Account';
+
+    if (currentUser.picture) {
+      avatarImg.src          = currentUser.picture;
+      avatarImg.style.display = 'block';
+      avatarPh.style.display  = 'none';
+    } else {
+      avatarImg.style.display = 'none';
+      avatarPh.style.display  = 'flex';
+      avatarPh.textContent    = (displayName[0] || '?').toUpperCase();
+    }
+
+    userNameEl.textContent = displayName;
+
+    if (ddName)  ddName.textContent  = displayName;
+    if (ddEmail) ddEmail.textContent = currentUser.email || '';
+    if (ddProvider) {
+      const providerLabel = { google: '🔵 Google', apple: '🍎 Apple' }[currentUser.provider] || currentUser.provider;
+      ddProvider.textContent = providerLabel;
+    }
+  } else {
+    signInBtn.style.display = 'flex';
+    userBtn.style.display   = 'none';
+  }
+}
+
+function toggleAuthDropdown() {
+  const dropdown = document.getElementById('auth-dropdown');
+  if (dropdown) {
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  }
+}
+
+function closeAuthDropdown() {
+  const dropdown = document.getElementById('auth-dropdown');
+  if (dropdown) dropdown.style.display = 'none';
+}
+
+function showAuthError(msg) {
+  const errEl = document.getElementById('auth-error');
+  if (!errEl) return;
+  errEl.textContent   = msg;
+  errEl.style.display = 'block';
+  setTimeout(() => { errEl.style.display = 'none'; }, 6000);
+}
+
+function setAuthLoading(loading) {
+  const signInBtn = document.getElementById('auth-signin-btn');
+  if (signInBtn) signInBtn.disabled = loading;
+}
+
+// Close user dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const userBtn  = document.getElementById('auth-user-btn');
+  const dropdown = document.getElementById('auth-dropdown');
+  if (dropdown && userBtn && !userBtn.contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+});
+
 </script>
 
 </body>
